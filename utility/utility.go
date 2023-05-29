@@ -1,10 +1,12 @@
 package utility
 
 import (
+	"errors"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
+	"gorm.io/gorm"
 )
 
 func LoadDotEnv() {
@@ -21,4 +23,17 @@ func Getenv(key, fallback string) string {
         return fallback
     }
     return value
+}
+
+func DBResponseHandle(result *gorm.DB) (int, error)  {
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		// handle record not found error
+		return 404, errors.New("User not found")
+	} else if result.Error != nil {
+		// handle other errors
+		return 500, result.Error
+	} else {
+		// record found
+		return 200, nil
+	}
 }
