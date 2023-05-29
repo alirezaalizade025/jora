@@ -1,43 +1,55 @@
 package auth
 
-// import (
-// 	"net/http"
-// 	"github.com/golang-jwt/jwt/v5"
-// 	"github.com/gin-gonic/gin"
-// 	"nomasho/config"
-// 	"nomasho/models"
-// 	"nomasho/utils"
-// )
+import (
+	"net/http"
 
-// // LoginController is the controller for the login route
-// func LoginController(c *gin.Context) {
-// 	var login models.Login
-// 	if err := c.ShouldBindJSON(&login); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
+	"github.com/gin-gonic/gin"
 
-// 	// check if user exists
-// 	var user models.User
-// 	config.DB.Where("email = ?", login.Email).First(&user)
-// 	if user.ID == 0 {
-// 		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-// 		return
-// 	}
+	userModel "nomasho/app/models/user"
+	"nomasho/database/postgres"
+	"nomasho/utility"
+)
 
-// 	// check if password is correct
-// 	if err := utils.VerifyPassword(user.Password, login.Password); err != nil {
-// 		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-// 		return
-// 	}
+type User struct {
+	RegisterNumber string   `json:"register_number" form:"register_number" binding:"required"`
+	Password       string `json:"password" form:"password" binding:"required"`
+}
 
-// 	// create jwt
-// 	token, err := utils.CreateToken(user.ID)
-// 	if err != nil {
-// 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "error creating token"})
-// 		return
-// 	}
+func Login(c *gin.Context) {
 
-// 	// send response
-// 	c.JSON(http.StatusOK, gin.H{"token": token})
-// }
+	var u User
+
+	// db connection
+	db := postgres.Connection()
+	sqlDB, _ := db.Conn.DB()
+	defer sqlDB.Close()
+
+	if err := c.ShouldBindJSON(&u); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, "Invalid json provided")
+		return
+	}
+
+	// find user by id in database
+	user := userModel.User{}
+
+	result := db.Conn.Where("register_number = ?", u.RegisterNumber).First(&user)
+	if result.Error != nil {
+		c.JSON(http.StatusUnauthorized, "Please provide valid login details")
+		return
+	}
+
+
+	// compare the user from the request, with the one we defined:
+	if user.Password != u.Password {
+		c.JSON(http.StatusUnauthorized, "Please provide valid login details")
+		return
+	}
+
+	token, error := utility.CreateToken(user.ID)
+	if error != nil {
+		c.JSON(http.StatusUnprocessableEntity, error.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"token": token})
+}

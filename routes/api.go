@@ -20,7 +20,7 @@ func Register()  {
 	})
 
 	// authentication
-	r.POST("/login", auth.Register)
+	r.POST("/login", auth.Login)
 		
 
 	r.Run(":8181")
