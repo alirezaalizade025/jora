@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"nomasho/utility"
-
+	userModel "nomasho/app/models/user"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -18,7 +18,6 @@ import (
 func CreateDatabase(databaseName string) {
 	host := utility.Getenv("DB_HOST", "127.0.0.1")
 	port := utility.Getenv("DB_PORT", "5432")
-	dbname := utility.Getenv("DB_NAME", "nomasho_db")
 	user := utility.Getenv("DB_USER", "postgres")
 	password := utility.Getenv("DB_PASSWORD", "postgres")
 	timezone := utility.Getenv("DB_TIMEZONE", "Asia/Tehran")
@@ -30,7 +29,7 @@ func CreateDatabase(databaseName string) {
 	// DB.Exec(createDatabaseCommand)
 
 	var databaseExists int64
-	DB.Raw("SELECT count(*) FROM pg_database where datname = ?", dbname).Count(&databaseExists)
+	DB.Raw("SELECT count(*) FROM pg_database where datname = ?", databaseName).Count(&databaseExists)
 
 	if databaseExists == 0 {
 		createDatabaseCommand := fmt.Sprintf("CREATE DATABASE %s", databaseName)
@@ -39,32 +38,34 @@ func CreateDatabase(databaseName string) {
 }
 
 
-type dbConn struct {
-	Conn *gorm.DB
-}
+var DB *gorm.DB
 
-var conn *dbConn
+func ConnectDataBase(){	
 
-func Connection() *dbConn {
-	if conn == nil {
-		host := utility.Getenv("DB_HOST", "127.0.0.1")
-		port := utility.Getenv("DB_PORT", "5432")
-		dbname := utility.Getenv("DB_NAME", "nomasho_db")
-		user := utility.Getenv("DB_USER", "postgres")
-		password := utility.Getenv("DB_PASSWORD", "postgres")
-		sslmode := utility.Getenv("DB_SSLMODE", "disable")
+	CreateDatabase(utility.Getenv("DB_NAME", "nomasho_db"))
+	
+	host := utility.Getenv("DB_HOST", "127.0.0.1")
+	port := utility.Getenv("DB_PORT", "5432")
+	dbname := utility.Getenv("DB_NAME", "nomasho_db")
+	user := utility.Getenv("DB_USER", "postgres")
+	password := utility.Getenv("DB_PASSWORD", "postgres")
+	sslmode := utility.Getenv("DB_SSLMODE", "disable")
 
-		dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", host, port, dbname, user, password, sslmode)
+	dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", host, port, dbname, user, password, sslmode)
+	
 
-		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-			// Logger: logger.Default.LogMode(logger.Silent),
-			PrepareStmt: true,
-		})
-		CheckError(err)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		// Logger: logger.Default.LogMode(logger.Silent),
+		PrepareStmt: true,
+	})
 
-		return &dbConn{Conn: db}
-	}
-	return conn
+	CheckError(err)
+
+	DB = db
+	
+
+	// migrations
+	DB.AutoMigrate(&userModel.User{})	
 }
 
 

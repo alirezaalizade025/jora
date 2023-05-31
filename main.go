@@ -1,16 +1,17 @@
 package main
 
 import (
+	"nomasho/database/postgres"
 	"nomasho/routes"
 	"nomasho/utility"
-	"nomasho/app/cmd"
 )
 
 func main() {
 
 	utility.LoadDotEnv()
 
-	cmd.Execute()
+	// establish db connection & migration
+	postgres.ConnectDataBase()
 
     routes.Register()
 }

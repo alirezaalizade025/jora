@@ -1,55 +1,76 @@
 package auth
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 
 	userModel "nomasho/app/models/user"
 	"nomasho/database/postgres"
 	"nomasho/utility"
 )
 
-type User struct {
+type LoginRequest struct {
 	RegisterNumber string   `json:"register_number" form:"register_number" binding:"required"`
 	Password       string `json:"password" form:"password" binding:"required"`
 }
 
 func Login(c *gin.Context) {
 
-	var u User
+	var request LoginRequest
 
-	// db connection
-	db := postgres.Connection()
-	sqlDB, _ := db.Conn.DB()
-	defer sqlDB.Close()
-
-	if err := c.ShouldBindJSON(&u); err != nil {
+	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, "Invalid json provided")
 		return
 	}
 
-	// find user by id in database
-	user := userModel.User{}
 
-	result := db.Conn.Where("register_number = ?", u.RegisterNumber).First(&user)
-	if result.Error != nil {
-		c.JSON(http.StatusUnauthorized, "Please provide valid login details")
+	token, err := LoginCheck(request.RegisterNumber, request.Password)
+
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "username or password is incorrect."})
 		return
 	}
 
-
-	// compare the user from the request, with the one we defined:
-	if user.Password != u.Password {
-		c.JSON(http.StatusUnauthorized, "Please provide valid login details")
-		return
-	}
-
-	token, error := utility.CreateToken(user.ID)
-	if error != nil {
-		c.JSON(http.StatusUnprocessableEntity, error.Error())
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, gin.H{"token":token})
 }
+
+
+
+func LoginCheck(registerNumber string, password string) (string,error) {
+	
+	var err error
+
+	u := userModel.User{}
+
+	result := postgres.DB.Model(userModel.User{}).Where("register_number = ?", registerNumber).First(&u)
+
+
+	if result.RowsAffected == 0 {
+		return "", errors.New("user not found")
+	}
+
+	if result.Error != nil {
+		return "", err
+	}
+
+
+	err = utility.VerifyPassword(password, u.Password)
+
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		return "", err
+	}
+
+	token,err := utility.GenerateToken(u.ID)
+
+	if err != nil {
+		return "",err
+	}
+
+	return token,nil
+}
+
+
