@@ -8,23 +8,27 @@ import (
 	"strings"
 	"time"
 
+	"github.com/duke-git/lancet/v2/convertor"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+
+	db "jora/database/postgres"
 )
-
-
 
 type TokenDetails struct {
 	gorm.Model
 
+	UserID       uint   `json:"user_id"`
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 	AccessUuid   string `json:"access_uuid"`
 	RefreshUuid  string `json:"refresh_uuid"`
 	AtExpires    int64  `json:"at_expires"`
 	RtExpires    int64  `json:"rt_expires"`
+	Revoke       bool   `json:"revoke" gorm:"default:false"`
 }
 
 func GenerateToken(user_id uint) (string, error) {
@@ -34,26 +38,20 @@ func GenerateToken(user_id uint) (string, error) {
 		return "", err
 	}
 
-	// // atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
-	// at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
-
-	// token, err := at.SignedString([]byte(Getenv("JWT_SECRET_KEY", "")))
-	// if err != nil {
-	// 	return "", err
-	// }
-
-	// return token, nil
-
-
-
 	if err != nil {
-		return "",err
+		return "", err
 	}
 
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
+	claims["aud"] = generateUniqueUUID().String()
 	claims["user_id"] = user_id
-	claims["exp"] = time.Now().Add(time.Hour * time.Duration(1)).Unix()
+
+	// life time of token
+	lifeTimeHours, _ := convertor.ToInt(Getenv("JWT_LIFE_TIME_HOURS", "1"))
+
+	claims["exp"] = time.Now().Add(time.Hour * time.Duration(lifeTimeHours)).Unix()
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	return token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
@@ -68,23 +66,65 @@ func CheckJwtTokenExists() error {
 	return nil
 }
 
-func VerifyPassword(password,hashedPassword string) error {
+func VerifyPassword(password, hashedPassword string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
-
 
 func TokenValid(c *gin.Context) error {
 	tokenString := ExtractToken(c)
 
+	// validate token format
 	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+
+			return nil, fmt.Errorf("UNEXPECTED SIGNING METHOD: %v", token.Header["alg"])
 		}
+
 		return []byte(os.Getenv("JWT_SECRET_KEY")), nil
 	})
+
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func TokenCheckDb(c *gin.Context) error {
+	tokenString := ExtractToken(c)
+
+	claims := ExtractTokenClaim(tokenString)
+
+	// expire on token data
+	if claims["exp"] == nil || claims["user_id"] == "" {
+		return errors.New("TOKEN IS INVALID")
+	}
+
+	expiredAt := time.Unix(int64(claims["exp"].(float64)), 0)
+	if time.Now().After(expiredAt) {
+		return errors.New("TOKEN IS EXPIRED")
+	}
+
+	// expire on database (check uuid for that user id)
+	var td TokenDetails
+	row := db.DB.Where("access_token = ?", tokenString).Where("user_id = ?", claims["user_id"]).First(&td)
+
+	// if token not exists
+	if row.RowsAffected == 0 {
+		return errors.New("TOKEN NOT FOUND")
+	}
+
+	// if token revoked
+	if td.Revoke {
+		return errors.New("TOKEN IS REVOKED")
+	}
+
+	// if token expired
+	if time.Now().After(time.Unix(td.AtExpires, 0)) {
+		return errors.New("TOKEN IS EXPIRED")
+	}
+
 	return nil
 }
 
@@ -100,10 +140,36 @@ func ExtractToken(c *gin.Context) string {
 	return ""
 }
 
-// func DeleteAuth(givenUuid string) (int64, error) {
-// 	deleted, err := client.Del(givenUuid).Result()
-// 	if err != nil {
-// 		return 0, err
-// 	}
-// 	return deleted, nil
-// }
+func ExtractTokenClaim(token string) jwt.MapClaims {
+
+	claims := jwt.MapClaims{}
+	_, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("JWT_SECRET_KEY")), nil
+	})
+
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	return claims
+
+}
+
+func generateUniqueUUID() uuid.UUID {
+	uuidWithHyphen := uuid.New()
+
+	for (db.DB.Where("access_uuid = ?", uuidWithHyphen.String()).First(&TokenDetails{}).RowsAffected != 0) {
+		uuidWithHyphen = uuid.New()
+	}
+
+	return uuidWithHyphen
+}
+
+func Logout(access_token string) {
+	var td TokenDetails
+	db.DB.Where("access_token = ?", access_token).First(&td)
+
+	td.Revoke = true
+
+	db.DB.Save(&td)
+}

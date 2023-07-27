@@ -3,24 +3,20 @@ package postgres
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
-	"nomasho/utility"
-	userModel "nomasho/app/models/user"
-
+	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	_ "github.com/lib/pq"
 )
 
-
-
 func CreateDatabase(databaseName string) {
-	host := utility.Getenv("DB_HOST", "127.0.0.1")
-	port := utility.Getenv("DB_PORT", "5432")
-	user := utility.Getenv("DB_USER", "postgres")
-	password := utility.Getenv("DB_PASSWORD", "postgres")
-	timezone := utility.Getenv("DB_TIMEZONE", "Asia/Tehran")
+	host := getenv("DB_HOST", "127.0.0.1")
+	port := getenv("DB_PORT", "5432")
+	user := getenv("DB_USER", "postgres")
+	password := getenv("DB_PASSWORD", "postgres")
+	timezone := getenv("DB_TIMEZONE", "Asia/Tehran")
 
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s sslmode=disable TimeZone=%s", host, port, user, password, timezone)
 	DB, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -37,22 +33,20 @@ func CreateDatabase(databaseName string) {
 	}
 }
 
-
 var DB *gorm.DB
 
-func ConnectDataBase(){	
+func ConnectDataBase() {
 
-	CreateDatabase(utility.Getenv("DB_NAME", "nomasho_db"))
-	
-	host := utility.Getenv("DB_HOST", "127.0.0.1")
-	port := utility.Getenv("DB_PORT", "5432")
-	dbname := utility.Getenv("DB_NAME", "nomasho_db")
-	user := utility.Getenv("DB_USER", "postgres")
-	password := utility.Getenv("DB_PASSWORD", "postgres")
-	sslmode := utility.Getenv("DB_SSLMODE", "disable")
+	CreateDatabase(getenv("DB_NAME", "jora_db"))
+
+	host := getenv("DB_HOST", "127.0.0.1")
+	port := getenv("DB_PORT", "5432")
+	dbname := getenv("DB_NAME", "jora_db")
+	user := getenv("DB_USER", "postgres")
+	password := getenv("DB_PASSWORD", "postgres")
+	sslmode := getenv("DB_SSLMODE", "disable")
 
 	dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", host, port, dbname, user, password, sslmode)
-	
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		// Logger: logger.Default.LogMode(logger.Silent),
@@ -62,21 +56,15 @@ func ConnectDataBase(){
 	CheckError(err)
 
 	DB = db
-	
-
-	// migrations
-	DB.AutoMigrate(&userModel.User{})	
 }
 
-
-
 func TestConnection() *gorm.DB {
-	host := utility.Getenv("DB_HOST", "127.0.0.1")
-	port := utility.Getenv("DB_PORT", "5432")
-	user := utility.Getenv("DB_USER", "postgres")
-	password := utility.Getenv("DB_PASSWORD", "postgres")
-	sslmode := utility.Getenv("DB_SSLMODE", "disable")
-	dbname := utility.Getenv("DB_NAME", "nomasho_test_db")
+	host := getenv("DB_HOST", "127.0.0.1")
+	port := getenv("DB_PORT", "5432")
+	user := getenv("DB_USER", "postgres")
+	password := getenv("DB_PASSWORD", "postgres")
+	sslmode := getenv("DB_SSLMODE", "disable")
+	dbname := getenv("DB_NAME", "jora_test_db")
 
 	dsn := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s", host, port, user, dbname, password, sslmode)
 
@@ -89,8 +77,6 @@ func TestConnection() *gorm.DB {
 	return db
 }
 
-
-
 func CheckError(err error) {
 	if err != nil {
 		// sentry.CaptureException(errors.New(err.Error()))
@@ -98,8 +84,6 @@ func CheckError(err error) {
 		panic(err)
 	}
 }
-
-
 
 func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
@@ -121,5 +105,11 @@ func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-
-
+// to import cycle force copy here
+func getenv(key, fallback string) string {
+	value := os.Getenv(key)
+	if len(value) == 0 {
+		return fallback
+	}
+	return value
+}

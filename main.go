@@ -1,9 +1,10 @@
 package main
 
 import (
-	"nomasho/database/postgres"
-	"nomasho/routes"
-	"nomasho/utility"
+	userModel "jora/app/models/user"
+	"jora/database/postgres"
+	"jora/routes"
+	"jora/utility"
 )
 
 func main() {
@@ -13,5 +14,9 @@ func main() {
 	// establish db connection & migration
 	postgres.ConnectDataBase()
 
-    routes.Register()
+	// migrations
+	postgres.DB.AutoMigrate(&userModel.User{})
+	postgres.DB.AutoMigrate(&utility.TokenDetails{})
+
+	routes.Register()
 }

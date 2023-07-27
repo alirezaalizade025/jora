@@ -1,4 +1,4 @@
-module nomasho
+module jora
 
 go 1.18
 
@@ -12,6 +12,8 @@ require (
 )
 
 require (
+	github.com/duke-git/lancet/v2 v2.2.3 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 )
