@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 
 	userModel "jora/app/models/user"
 	"jora/database/postgres"
@@ -52,9 +51,10 @@ func LoginCheck(registerNumber string, password string) (string, error) {
 		return "", err
 	}
 
+
 	err = utility.VerifyPassword(password, u.Password)
 
-	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+	if err != nil {
 		return "", err
 	}
 

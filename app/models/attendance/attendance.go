@@ -11,19 +11,19 @@ type Attendance struct {
 
 	UserID uint `json:"user_id" gorm:"index"`
 
-	ClockIn  time.Time `json:"clock_in" gorm:"index"`
-	ClockOut time.Time `json:"clock_out" gorm:"index"`
-	TypeInt  uint8     `json:"type_int" gorm:"index;type:SMALLINT CHECK (type >= 0);column:type"`
+	ClockIn  *time.Time `json:"clock_in" gorm:"index"`
+	ClockOut *time.Time `json:"clock_out" gorm:"index"`
+	TypeInt  uint8     `json:"-" gorm:"index;type:SMALLINT CHECK (type >= 0);column:type"`
 	Type	 string    `json:"type" gorm:"-"`
 
-	CheckInNote  string `json:"check_in_note" gorm:"type:text"`
-	CheckOutNote string `json:"check_out_note" gorm:"type:text"`
+	CheckInNote  *string `json:"check_in_note" gorm:"type:text"`
+	CheckOutNote *string `json:"check_out_note" gorm:"type:text"`
 
-	TeamLeadCheck     bool   `json:"team_lead_check" gorm:"default:false"`
-	TeamLeadCheckNote string `json:"team_lead_check_note" gorm:"type:text"`
+	TeamLeadCheck     *bool   `json:"team_lead_check" gorm:"default:null"`
+	TeamLeadCheckNote *string `json:"team_lead_check_note" gorm:"type:text"`
 
-	ManagerCheck     bool   `json:"manager_check" gorm:"default:false"`
-	ManagerCheckNote string `json:"manager_check_note" gorm:"type:text"`
+	ManagerCheck     *bool   `json:"manager_check" gorm:"default:null"`
+	ManagerCheckNote *string `json:"manager_check_note" gorm:"type:text"`
 }
 
 func TYPE_MAP() map[int]string {

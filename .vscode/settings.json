@@ -1,8 +1,10 @@
 {
     "cSpell.words": [
+        "datetime",
         "gonic",
         "gorm",
         "joho",
-        "jora"
+        "jora",
+        "oneof"
     ]
 }

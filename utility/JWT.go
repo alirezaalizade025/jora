@@ -67,6 +67,7 @@ func CheckJwtTokenExists() error {
 }
 
 func VerifyPassword(password, hashedPassword string) error {
+
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
@@ -125,6 +126,10 @@ func TokenCheckDb(c *gin.Context) error {
 		return errors.New("TOKEN IS EXPIRED")
 	}
 
+	// set logged user id to context
+	// todo: get user data from database and set to context
+	c.Set("userId", claims["user_id"])
+
 	return nil
 }
 
@@ -147,7 +152,8 @@ func ExtractTokenClaim(token string) jwt.MapClaims {
 		return []byte(os.Getenv("JWT_SECRET_KEY")), nil
 	})
 
-	if err != nil {
+
+	if err != nil && err.Error() != "token has invalid claims: token is expired" { //todo: fix this
 		log.Panicln(err)
 	}
 

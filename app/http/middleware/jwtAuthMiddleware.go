@@ -12,6 +12,7 @@ func JwtAuthMiddleware() gin.HandlerFunc {
 
 		errorHandler(c, utility.TokenValid(c))
 
+		// check with db if token is valid set user to context
 		errorHandler(c, utility.TokenCheckDb(c))
 
 		c.Next()

@@ -1,27 +1,26 @@
 package routes
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 
-	"jora/app/middleware"
-	"jora/controllers/auth"
+	"jora/app/http/middleware"
+	"jora/app/http/controllers/auth"
+	"jora/app/http/controllers/clockwork"
 )
 
 func Register() {
 	r := gin.Default()
 
-	// ping
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	}, middleware.JwtAuthMiddleware())
 
 	// authentication
 	r.POST("/login", auth.Login)
 	r.POST("/logout", auth.Logout)
+
+	// clockwise
+	clockwiseGroup := r.Group("/clockworks").Use(middleware.JwtAuthMiddleware())
+	
+	clockwiseGroup.POST("/clock-in", clockwork.ClockIn)
+	clockwiseGroup.POST("/clock-out", clockwork.ClockOut)
 
 	r.Run(":8181")
 }
