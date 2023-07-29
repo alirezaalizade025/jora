@@ -1,3 +1,5 @@
+gitee.com/golang-module/carbon/v2 v2.2.3 h1:pT4LzbII7L+hJuur853nU8jHvNR9bvC0SsFjamWRAEQ=
+gitee.com/golang-module/carbon/v2 v2.2.3/go.mod h1:04cKklk7Rtl7P1bZv8m6b9Vn+w4p2xq2gU9WPUN4BIs=
 github.com/cpuguy83/go-md2man/v2 v2.0.2/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

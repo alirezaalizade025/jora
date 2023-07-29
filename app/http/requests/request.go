@@ -52,11 +52,11 @@ func handleErrorMessage(request request, err error, c *gin.Context) bool {
 		}
 
 		// todo: log validation errors
-
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
 			"errors": out,
 		})
 		return false
+
 	}
 	return true
 }

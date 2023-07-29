@@ -13,32 +13,30 @@ type Attendance struct {
 
 	ClockIn  *time.Time `json:"clock_in" gorm:"index"`
 	ClockOut *time.Time `json:"clock_out" gorm:"index"`
-	TypeInt  uint8     `json:"-" gorm:"index;type:SMALLINT CHECK (type >= 0);column:type"`
-	Type	 string    `json:"type" gorm:"-"`
+	TypeInt  uint8      `json:"-" gorm:"index;type:SMALLINT CHECK (type >= 0);column:type"`
+	Type     string     `json:"type" gorm:"-"`
 
-	CheckInNote  *string `json:"check_in_note" gorm:"type:text"`
-	CheckOutNote *string `json:"check_out_note" gorm:"type:text"`
+	Note *string `json:"note" gorm:"type:text"`
 
-	TeamLeadCheck     *bool   `json:"team_lead_check" gorm:"default:null"`
-	TeamLeadCheckNote *string `json:"team_lead_check_note" gorm:"type:text"`
+	TeamLeadCheck *bool   `json:"team_lead_check" gorm:"default:null"`
+	TeamLeadNote  *string `json:"team_lead_note" gorm:"type:text"`
 
-	ManagerCheck     *bool   `json:"manager_check" gorm:"default:null"`
-	ManagerCheckNote *string `json:"manager_check_note" gorm:"type:text"`
+	ManagerCheck *bool   `json:"manager_check" gorm:"default:null"`
+	ManagerNote  *string `json:"manager_note" gorm:"type:text"`
 }
 
 func TYPE_MAP() map[int]string {
 	return map[int]string{
 		1: "working", // ساعت کاری
 
-		2: "sick_leave", // مرخصی استعلاجی
-		3: "personal_leave", // مرخصی استحقاقی-شخصی
-		4: "business_leave", // مرخصی-کاری
-		5: "vacation_leave", // مرخصی استحقاقی-تعطیلات
+		11: "sick_leave",     // مرخصی استعلاجی
+		12: "annual_leave",   // مرخصی استحقاقی-شخصی
+		13: "vacation_leave", // مرخصی استحقاقی-تعطیلات
 
-		6: "working_from_home",	// دورکاری
+		21: "business_trip", // ماموریت کاری
+		22: "remote_work",   // دورکاری
 	}
 }
-
 
 //==============================================================================//
 //																			    //
@@ -46,7 +44,7 @@ func TYPE_MAP() map[int]string {
 //																				//
 //==============================================================================//
 
-func (attendance *Attendance) GetTypeName() string {
+func (attendance *Attendance) GetType() string {
 	return TYPE_MAP()[int(attendance.TypeInt)]
 }
 
@@ -56,11 +54,10 @@ func (attendance *Attendance) GetTypeName() string {
 //																			    //
 //==============================================================================//
 
-func (attendance *Attendance) SetTypeName() {
+func (attendance *Attendance) SetType() {
 	for key, value := range TYPE_MAP() {
 		if value == attendance.Type {
 			attendance.TypeInt = uint8(key)
 		}
 	}
 }
-

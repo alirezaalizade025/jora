@@ -10,10 +10,27 @@ import (
 func JwtAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		errorHandler(c, utility.TokenValid(c))
+		err := utility.TokenValid(c)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "token is not valid",
+			})
+		
+			c.Abort()
+			return
+		}
+	
 
 		// check with db if token is valid set user to context
-		errorHandler(c, utility.TokenCheckDb(c))
+		err = utility.TokenCheckDb(c)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "token is not valid",
+			})
+		
+			c.Abort()
+			return
+		}
 
 		c.Next()
 	}

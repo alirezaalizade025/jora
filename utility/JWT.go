@@ -95,6 +95,10 @@ func TokenValid(c *gin.Context) error {
 func TokenCheckDb(c *gin.Context) error {
 	tokenString := ExtractToken(c)
 
+	if tokenString == "" {
+		return errors.New("TOKEN IS INVALID")
+	}
+
 	claims := ExtractTokenClaim(tokenString)
 
 	// expire on token data

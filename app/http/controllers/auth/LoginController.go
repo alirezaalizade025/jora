@@ -6,26 +6,20 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	request "jora/app/http/requests"
 	userModel "jora/app/models/user"
 	"jora/database/postgres"
 	"jora/utility"
 )
 
-type LoginRequest struct {
-	RegisterNumber string `json:"register_number" form:"register_number" binding:"required"`
-	Password       string `json:"password" form:"password" binding:"required"`
-}
-
 func Login(c *gin.Context) {
-
-	var request LoginRequest
-
-	if err := c.ShouldBindJSON(&request); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, "Invalid json provided")
+	
+	req := &request.LoginRequest{}
+	if !request.Validation(c , req) {
 		return
 	}
 
-	token, err := LoginCheck(request.RegisterNumber, request.Password)
+	token, err := LoginCheck(req.RegisterNumber, req.Password)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "username or password is incorrect."})
