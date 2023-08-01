@@ -320,6 +320,72 @@ func RemoteWork(c *gin.Context) {
 	})
 }
 
+func MissingAttendance(c *gin.Context) {
+
+	// get user id from context
+	userId, exists := c.Get("userId")
+	if !exists {
+		userId = 0
+	}
+
+	req := &request.MissingAttendanceRequest{}
+
+	if !request.Validation(c, req) {
+		return
+	}
+
+	// convert clock string to time.Time
+	StartAt := carbon.Parse(req.StartAt).ToStdTime()
+	FinishAt := carbon.Parse(req.FinishAt).ToStdTime()
+
+	// validate clock in and clock out
+	if FinishAt.Before(StartAt) {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"message": "finish_at must be grater then start_at",
+		})
+		return
+	}
+
+	// save clock in time
+	attendanceModel := &attendance.Attendance{
+		UserID:   uint(userId.(float64)),
+		FinishAt: &FinishAt,
+		StartAt:  &StartAt,
+		Note:     &req.Note,
+		Type:     "working",
+	}
+	attendanceModel.SetType()
+
+	var count int64
+	// check for duplicate request
+	query := db.DB.Model(&attendanceModel)
+	query.Where("user_id = ?", userId)
+	query.Where("DATE(start_at) = ?", StartAt)
+	query.Where("DATE(finish_at) = ?", FinishAt)
+	query.Where("type = ?", attendanceModel.TypeInt)
+	query.Count(&count)
+
+	if count > 0 {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"message": "duplicate request",
+		})
+		return
+	}
+
+	db.DB.Model(&attendanceModel).Save(attendanceModel)
+
+	c.JSON(200, gin.H{
+		"message": "success",
+		"data":    attendanceModel,
+	})
+}
+
+
+/*
+/*	Attendance Update
+/*
+/*	all data of attendance must send to api !!!!
+*/
 func Update(c *gin.Context) {
 
 	// get user id from context

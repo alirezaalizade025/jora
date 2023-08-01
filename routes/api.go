@@ -27,6 +27,7 @@ func Register() {
 	clockwiseGroup.POST("/leave/hourly", attendanceController.HourlyLeave)
 	clockwiseGroup.POST("business-trip", attendanceController.BusinessTrip)
 	clockwiseGroup.POST("remote-work", attendanceController.RemoteWork)
+	clockwiseGroup.POST("missing", attendanceController.MissingAttendance)
 
 	clockwiseGroup.PUT("/working/:id", attendanceController.Update)
 
