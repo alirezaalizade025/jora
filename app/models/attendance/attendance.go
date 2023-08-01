@@ -11,8 +11,8 @@ type Attendance struct {
 
 	UserID uint `json:"user_id" gorm:"index"`
 
-	ClockIn  *time.Time `json:"clock_in" gorm:"index"`
-	ClockOut *time.Time `json:"clock_out" gorm:"index"`
+	StartAt  *time.Time `json:"start_at" gorm:"index"`
+	FinishAt *time.Time `json:"finish_at" gorm:"index"`
 	TypeInt  uint8      `json:"-" gorm:"index;type:SMALLINT CHECK (type >= 0);column:type"`
 	Type     string     `json:"type" gorm:"-"`
 
@@ -32,6 +32,8 @@ func TYPE_MAP() map[int]string {
 		11: "sick_leave",     // مرخصی استعلاجی
 		12: "annual_leave",   // مرخصی استحقاقی-شخصی
 		13: "vacation_leave", // مرخصی استحقاقی-تعطیلات
+
+		14: "hourly_leave", // مرخصی ساعتی
 
 		21: "business_trip", // ماموریت کاری
 		22: "remote_work",   // دورکاری

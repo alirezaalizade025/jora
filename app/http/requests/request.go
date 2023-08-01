@@ -114,7 +114,7 @@ func in(fl validator.FieldLevel) bool {
 	var list map[int]string
 
 	switch arg {
-	case "clockInType":
+	case "attendanceType":
 		list = attendance.TYPE_MAP()
 	default:
 		return false

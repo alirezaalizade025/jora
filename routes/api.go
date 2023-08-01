@@ -1,11 +1,11 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
-
 	"jora/app/http/controllers/attendanceController"
 	"jora/app/http/controllers/auth"
 	"jora/app/http/middleware"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Register() {
@@ -20,10 +20,15 @@ func Register() {
 	// clockwise
 	clockwiseGroup := r.Group("/attendances").Use(middleware.JwtAuthMiddleware())
 
-	clockwiseGroup.POST("/clock-in", attendanceController.ClockIn)
-	clockwiseGroup.POST("/clock-out", attendanceController.ClockOut)
+	clockwiseGroup.POST("/clock-in", attendanceController.Start)
+	clockwiseGroup.POST("/clock-out", attendanceController.Finish)
 
 	clockwiseGroup.POST("/leave", attendanceController.Leave)
+	clockwiseGroup.POST("/leave/hourly", attendanceController.HourlyLeave)
+	clockwiseGroup.POST("business-trip", attendanceController.BusinessTrip)
+	clockwiseGroup.POST("remote-work", attendanceController.RemoteWork)
+
+	clockwiseGroup.PUT("/working/:id", attendanceController.Update)
 
 	r.Run(":8181")
 }
