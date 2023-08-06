@@ -1,6 +1,7 @@
 package main
 
 import (
+	teamLeadModel "jora/app/models/teamLead"
 	attendanceModel "jora/app/models/attendance"
 	userModel "jora/app/models/user"
 	"jora/database/postgres"
@@ -27,6 +28,7 @@ func main() {
 	postgres.DB.AutoMigrate(&userModel.User{})
 	postgres.DB.AutoMigrate(&utility.TokenDetails{})
 	postgres.DB.AutoMigrate(&attendanceModel.Attendance{})
+	postgres.DB.AutoMigrate(&teamLeadModel.TeamLead{})
 
 	routes.Register()
 }

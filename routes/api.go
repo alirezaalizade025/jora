@@ -11,14 +11,17 @@ import (
 func Register() {
 	r := gin.New()
 
+	// add api prefix
+	api := r.Group("/api")
+
 	// r.Use(middleware.TrimMiddleware()) // todo
 
 	// authentication
-	r.POST("/login", auth.Login) // todo: if user logged in redirect
-	r.POST("/logout", auth.Logout)
+	api.POST("/login", auth.Login) // todo: if user logged in redirect
+	api.POST("/logout", auth.Logout)
 
 	// clockwise
-	clockwiseGroup := r.Group("/attendances").Use(middleware.JwtAuthMiddleware())
+	clockwiseGroup := api.Group("/attendances").Use(middleware.JwtAuthMiddleware())
 
 	clockwiseGroup.POST("/clock-in", attendanceController.Start)
 	clockwiseGroup.POST("/clock-out", attendanceController.Finish)
@@ -30,6 +33,9 @@ func Register() {
 	clockwiseGroup.POST("missing", attendanceController.MissingAttendance)
 
 	clockwiseGroup.PUT("/working/:id", attendanceController.Update)
+	// todo: team lead check
+
+	// todo: manager check
 
 	r.Run(":8181")
 }
