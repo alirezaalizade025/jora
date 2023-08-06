@@ -82,7 +82,7 @@ func TokenValid(c *gin.Context) error {
 			return nil, fmt.Errorf("UNEXPECTED SIGNING METHOD: %v", token.Header["alg"])
 		}
 
-		return []byte(os.Getenv("JWT_SECRET_KEY")), nil
+		return []byte(os.Getenv("JWT_PUBLIC_KEY")), nil
 	})
 
 	if err != nil {
