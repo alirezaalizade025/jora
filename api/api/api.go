@@ -45,7 +45,7 @@ func Register() {
 
 	// todo: manager check
 
-	r.Run(":8181")
+	// r.Run(":8181")
 }
 
 // @ vercel
@@ -58,6 +58,9 @@ func init() {
 }
 
 // @ vercel
-func Handler(w http.ResponseWriter, r *http.Request) {
-	app.ServeHTTP(w, r)
+func Handler(c *gin.Context) {
+
+gin.SetMode(gin.ReleaseMode)
+	Register()
+    app.ServeHTTP(c.Writer, c.Request)
 }
