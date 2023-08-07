@@ -18,12 +18,6 @@ func Register() {
 
 	// r.Use(middleware.TrimMiddleware()) // todo
 
-	// add ping
-	api.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-
 	// authentication
 	api.POST("/login", auth.Login) // todo: if user logged in redirect
 	api.POST("/logout", auth.Logout)

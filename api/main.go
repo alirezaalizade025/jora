@@ -5,7 +5,7 @@ import (
 	attendanceModel "jora/app/models/attendance"
 	userModel "jora/app/models/user"
 	"jora/database/postgres"
-	"jora/routes"
+	"jora/api"
 	"jora/utility"
 	"time"
 	_ "time/tzdata"
