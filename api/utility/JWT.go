@@ -1,8 +1,10 @@
 package utility
 
 import (
+	"crypto/rsa"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -17,6 +19,39 @@ import (
 
 	db "jora/database/postgres"
 )
+
+var (
+	PrivateKey *rsa.PrivateKey
+	PublicKey *rsa.PublicKey
+)
+
+func init() {
+	// Public key
+	pubBytes, err := ioutil.ReadFile("public.pem")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	publicKey, err := jwt.ParseRSAPublicKeyFromPEM(pubBytes)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+
+	// Private key
+	privBytes, err := ioutil.ReadFile("private.pem")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	
+	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(privBytes)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	PublicKey = publicKey
+	PrivateKey = privateKey
+}
 
 type TokenDetails struct {
 	gorm.Model
@@ -34,7 +69,7 @@ type TokenDetails struct {
 func GenerateToken(user_id uint) (string, error) {
 	var err error
 
-	if CheckJwtTokenExists() != nil {
+	if PrivateKey != nil || PublicKey != nil {
 		return "", err
 	}
 
@@ -52,18 +87,10 @@ func GenerateToken(user_id uint) (string, error) {
 
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(lifeTimeHours)).Unix()
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
 
-	return token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
-}
 
-func CheckJwtTokenExists() error {
-	if Getenv("JWT_SECRET_KEY", "") == "" {
-		log.Fatalf("SECRET not found in .env file")
-		return errors.New("SECRET not found in .env file")
-	}
-
-	return nil
+	return token.SignedString(PrivateKey)
 }
 
 func VerifyPassword(password, hashedPassword string) error {
@@ -153,7 +180,7 @@ func ExtractTokenClaim(token string) jwt.MapClaims {
 
 	claims := jwt.MapClaims{}
 	_, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("JWT_SECRET_KEY")), nil
+		return PublicKey, nil
 	})
 
 

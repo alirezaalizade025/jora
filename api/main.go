@@ -9,11 +9,22 @@ import (
 	"jora/utility"
 	"time"
 	_ "time/tzdata"
+	"jora/cmd"
 )
+
+func init() {
+
+	// load env
+	utility.LoadDotEnv()
+
+	// run commands
+	cmd.Execute()
+}
 
 func main() {
 
-	utility.LoadDotEnv()
+	
+
 
 	// set global time zone
 	// todo: move this to a better place
