@@ -59,9 +59,9 @@ func init() {
 }
 
 // @ vercel
-func Handler(c *gin.Context) {
+func Handler(w http.ResponseWriter, r *http.Request) {
 
 	gin.SetMode(gin.ReleaseMode)
 	Register()
-	app.ServeHTTP(c.Writer, c.Request)
+	app.ServeHTTP(w, r)
 }
