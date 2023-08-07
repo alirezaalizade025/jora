@@ -4,12 +4,13 @@ import (
 	"jora/app/http/controllers/attendanceController"
 	"jora/app/http/controllers/auth"
 	"jora/app/http/middleware"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Register() {
-	r := gin.New()
+	r := app
 
 	r.Use(gin.Logger())
 
@@ -40,4 +41,18 @@ func Register() {
 	// todo: manager check
 
 	r.Run(":8181")
+}
+
+// @ vercel
+var (
+	app *gin.Engine
+)
+// @ vercel
+func init() {
+	app = gin.New()
+}
+
+// @ vercel
+func Handler(w http.ResponseWriter, r *http.Request) {
+	app.ServeHTTP(w, r)
 }

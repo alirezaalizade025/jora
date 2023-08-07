@@ -19,10 +19,6 @@ func init() {
 }
 
 func main() {
-	Handler()
-}
-
-func Handler() {
 
 		// load env
 		utility.LoadDotEnv()
