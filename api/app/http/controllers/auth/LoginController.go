@@ -51,23 +51,27 @@ func LoginCheck(registerNumber string, password string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
+	
 	token, err := utility.GenerateToken(u.ID)
-
+	
 	if err != nil {
 		return "", err
 	}
 
 	// todo: do action if with same client id and user id login again
+	
+	err = SaveUserLoginData(u.ID, token)
 
-	SaveUserLoginData(u.ID, token)
-
-	return token, nil
+	return token, err
 }
 
 func SaveUserLoginData(user_id uint, tok string) error {
 
 	db := postgres.DB
+
+	if tok == "" {
+		return errors.New("token is empty")
+	}
 
 	td := &utility.TokenDetails{}
 	td.AccessToken = tok

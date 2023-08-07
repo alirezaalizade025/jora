@@ -14,16 +14,17 @@ import (
 
 func init() {
 
-	// load env
-	utility.LoadDotEnv()
-
-	// run commands
-	cmd.Execute()
+	// set pubic/private tokens in memory
+	utility.GetTokens()
 }
 
 func main() {
 
-	
+		// load env
+		utility.LoadDotEnv()
+
+		// run commands
+		cmd.Execute()
 
 
 	// set global time zone

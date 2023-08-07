@@ -25,16 +25,18 @@ var (
 	PublicKey *rsa.PublicKey
 )
 
-func init() {
+func GetTokens() {
 	// Public key
 	pubBytes, err := ioutil.ReadFile("public.pem")
 	if err != nil {
 		log.Fatalln(err)
+		os.Exit(1)
 	}
 
 	publicKey, err := jwt.ParseRSAPublicKeyFromPEM(pubBytes)
 	if err != nil {
 		log.Fatalln(err)
+		os.Exit(1)
 	}
 
 
@@ -42,11 +44,13 @@ func init() {
 	privBytes, err := ioutil.ReadFile("private.pem")
 	if err != nil {
 		log.Fatalln(err)
+		os.Exit(1)
 	}
 	
 	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(privBytes)
 	if err != nil {
 		log.Fatalln(err)
+		os.Exit(1)
 	}
 
 	PublicKey = publicKey
@@ -70,7 +74,7 @@ func GenerateToken(user_id uint) (string, error) {
 	var err error
 
 	if PrivateKey != nil || PublicKey != nil {
-		return "", err
+		GetTokens()
 	}
 
 	if err != nil {
@@ -104,12 +108,12 @@ func TokenValid(c *gin.Context) error {
 	// validate token format
 	_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 
 			return nil, fmt.Errorf("UNEXPECTED SIGNING METHOD: %v", token.Header["alg"])
 		}
 
-		return []byte(os.Getenv("JWT_PUBLIC_KEY")), nil
+		return PublicKey, nil
 	})
 
 	if err != nil {
