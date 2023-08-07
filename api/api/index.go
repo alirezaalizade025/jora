@@ -19,7 +19,7 @@ func Register() {
 
 	// r.Use(middleware.TrimMiddleware()) // todo
 
-	// ping 
+	// ping
 	api.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "pong"})
 	})
@@ -52,6 +52,7 @@ func Register() {
 var (
 	app *gin.Engine
 )
+
 // @ vercel
 func init() {
 	app = gin.New()
@@ -60,7 +61,7 @@ func init() {
 // @ vercel
 func Handler(c *gin.Context) {
 
-gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	Register()
-    app.ServeHTTP(c.Writer, c.Request)
+	app.ServeHTTP(c.Writer, c.Request)
 }
