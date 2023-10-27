@@ -4,6 +4,7 @@ import (
 	"jora/app/http/controllers/attendanceController"
 	"jora/app/http/controllers/auth"
 	"jora/app/http/middleware"
+	"jora/utility"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -45,7 +46,10 @@ func Register() {
 
 	// todo: manager check
 
-	// r.Run(":8181")
+	if (utility.Getenv("SERVE_MODE", "naturel") == "naturel") {
+		r.Run(":8181")
+	}
+
 }
 
 // @ vercel
