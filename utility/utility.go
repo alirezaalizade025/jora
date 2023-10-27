@@ -11,7 +11,8 @@ import (
 
 func LoadDotEnv() {
 	err := godotenv.Load()
-	if err != nil {
+
+	if err != nil && err.Error() != "open .env: no such file or directory" {  //todo: refactor
 		log.Fatalf("Some error occurred. Err: %s", err)
 	}
 }

@@ -1,3 +1,5 @@
-node_modules
-tailwind.config.js
-templates/input.css
+.env
+.env.example
+private.pem
+public.pem
+
