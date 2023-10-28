@@ -6,4 +6,12 @@
             "dest": "/api/index.go"
         }
     ]
+  "build": {
+    "commands": [
+      "go run generate:token"
+    ],
+    "solutions": {
+      "vercel/go": "@latest"  // Use a Vercel Go builder if you're working with Go applications
+    }
+  }
 }
