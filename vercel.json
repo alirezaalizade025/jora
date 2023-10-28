@@ -1,17 +1,17 @@
 {
-    "version": 2,
-    "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "/api/index.go"
-        }
-    ]
+  "version": 2,
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.go"
+    }
+  ],
   "build": {
     "commands": [
       "go run generate:token"
     ],
     "solutions": {
-      "vercel/go": "@latest"  // Use a Vercel Go builder if you're working with Go applications
+      "vercel/go": "@latest"
     }
   }
 }
