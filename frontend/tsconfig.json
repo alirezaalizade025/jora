@@ -1,0 +1,84 @@
+{
+  "ts-node": {
+    "require": [
+      "tsconfig-paths/register"
+    ]
+  },
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "incremental": true,
+    "downlevelIteration": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "strictBindCallApply": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "baseUrl": "./",
+    "types": [
+      "next",
+      "node"
+    ],
+    "paths": {
+      "Pages/*": [
+        "./src/Components/Pages/*"
+      ],
+      "Containers/*": [
+        "./src/Components/Containers/*"
+      ],
+      "Atoms/*": [
+        "./src/Components/Atoms/*"
+      ],
+      "Molecules/*":[
+        "./src/Components/Molecules/*"
+      ],
+      "api/*": [
+        "./src/api/*"
+      ],
+      "context/*": [
+        "./src/context/*"
+      ],
+      "hooks/*": [
+        "./src/hooks/*"
+      ],
+      "utils/*": [
+        "./src/utils/*"
+      ],
+      "type/*": [
+        "./src/type/*"
+      ],
+      "static/*": [
+        "./public/static/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": false
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+    ,"./node-tools/**/*"
+  ]
+}

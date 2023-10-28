@@ -1,0 +1,9 @@
+# Third party
+**/node_modules
+build/
+.next/
+logs
+.lighthouseci
+coverage
+cypress
+junit.xml
