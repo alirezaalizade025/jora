@@ -1,7 +1,7 @@
 import API from 'utils/Api';
 
 const login = async (props: LoginRequest) => {
-  const response = await API.post<LoginResponse>(`/auth/login`, props);
+  const response = await API.post<LoginResponse>(`/login`, props);
   return response;
 };
 

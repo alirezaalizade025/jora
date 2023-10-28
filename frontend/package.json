@@ -23,6 +23,7 @@
     "@mui/material": "^5.14.15",
     "@yudiel/react-qr-scanner": "^1.1.10",
     "axios": "^1.5.1",
+    "broadcast-channel": "^5.5.1",
     "jalaali-js": "^1.2.6",
     "leaflet": "^1.9.3",
     "map-obj": "^5.0.2",

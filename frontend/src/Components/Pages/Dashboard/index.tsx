@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import {QrScanner} from '@yudiel/react-qr-scanner';
+import { QrScanner } from '@yudiel/react-qr-scanner';
 import { Typography, Container, Paper, Button, Divider } from '@mui/material';
+import PageLayout from 'src/Components/PageLayout';
 
 const Dashboard = () => {
   const [attendanceRecord, setAttendanceRecord] = useState(null);
   const [scanning, setScanning] = useState(false);
 
   const handleScan = (data) => {
-    console.log('aaaaa',data);
-    
+    console.log('aaaaa', data);
+
     if (data) {
       setAttendanceRecord(data);
       setScanning(false);
@@ -45,13 +46,7 @@ const Dashboard = () => {
         ) : (
           <div>
             {scanning ? (
-         
-              <QrScanner
-              onError={handleError}
-              onScan={handleScan}
-              onDecode={e=>console.log('bbbbb',e)
-              }
-      />
+              <QrScanner onError={handleError} onDecode={handleScan} />
             ) : (
               <div>
                 <Typography variant="body1" gutterBottom>
@@ -74,8 +69,8 @@ const Dashboard = () => {
   );
 };
 
-Dashboard.getLayout = function getLayout(page: ReactElement) {
-  return <>{page}</>;
+Dashboard.getLayout = function getLayout(page) {
+  return <PageLayout>{page}</PageLayout>;
 };
 
 export default Dashboard;

@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { axiosRequestConverter, axiosResponseConverter, axiosResponseError } from './utils';
+import { apiBaseUrl } from 'utils/consts';
 
 const API = axios.create({
   withCredentials: false,
-  baseURL: 'jora.com',
+  baseURL: apiBaseUrl,
   timeout: 300_000,
 });
 

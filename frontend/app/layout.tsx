@@ -1,5 +1,6 @@
+import { AppProvider } from 'context/AppContext';
 import { Metadata } from 'next';
-import { Suspense } from 'react';
+import PageLayout from 'src/Components/PageLayout';
 import 'static/css/common.css';
 
 export const metadata: Metadata = {
@@ -7,8 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  // Layouts must accept a children prop.
-  // This will be populated with nested layouts or pages
   children,
 }: {
   children: React.ReactNode;
@@ -19,7 +18,9 @@ export default function RootLayout({
   return (
     <html lang={lang} dir={direction}>
       <body>
-          <>{children}</>
+        <AppProvider>
+          <PageLayout>{children}</PageLayout>
+        </AppProvider>
       </body>
     </html>
   );

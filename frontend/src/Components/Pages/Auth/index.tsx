@@ -1,69 +1,100 @@
+import React, { useEffect, useState } from 'react';
 import { Button, TextField, Typography, Container, Box, Paper } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
+import { cookieGetter, cookieSetter } from 'utils/cookieUtils';
+import { useRouter } from 'next/navigation';
+import AuthApi from 'src/Api/Auth';
+import { appVersion } from 'utils/consts';
+
 
 const Auth = () => {
-  const { control, handleSubmit } = useForm();
-  
-  const onSubmit = (data) => {
-    console.log(data);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    let timer;
+    if (cookieGetter({ name: 'jwt' })) {
+      timer = setTimeout(() => {
+        router.push('/');
+      }, 1000);
+    } else {
+      setIsLoading(false);
+    }
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [router]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    AuthApi.login({ username, password })
+      .then((res) => {
+        if (res.data.jwtToken) {
+          cookieSetter({ name: 'jwt', content: res.data.jwtToken, maxAge: 'oneDay' });
+          window.location.replace('/');
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.log(error);
+      });
   };
 
   return (
-    <Container maxWidth="sm">
-      <Paper elevation={3} style={{ padding: '16px', textAlign: 'center' }}>
-
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Typography variant="h4" gutterBottom>
-          Login
-        </Typography>
-        <Box component="div" m={2}>
-          <Controller
-            name="email"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Email"
-                variant="outlined"
-                fullWidth
-              />
-            )}
-          />
+    <Container component="main" maxWidth="xs">
+      <Paper elevation={3}>
+        <Box p={3}>
+          <Typography variant="h4" align="center" gutterBottom>
+            Your Logo
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="نام کاربری"
+              name="username"
+              autoComplete="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="رمز عبور"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              disabled={isLoading}
+            >
+              {isLoading ? 'در حال بارگذاری...' : 'ورود'}
+            </Button>
+          </form>
+          <Typography variant="body2" align="center">
+            {appVersion}
+          </Typography>
         </Box>
-        <Box component="div" m={2}>
-          <Controller
-            name="password"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                {...field}
-                type="password"
-                label="Password"
-                variant="outlined"
-                fullWidth
-              />
-            )}
-          />
-        </Box>
-        <Box component="div" m={2}>
-          <Button type="submit" variant="contained" color="primary">
-            Login
-          </Button>
-        </Box>
-      </form>
-
-
       </Paper>
-
     </Container>
   );
-};
-
-Auth.getLayout = function getLayout(page) {
-  return <>{page}</>;
 };
 
 export default Auth;
