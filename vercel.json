@@ -6,7 +6,6 @@
             "dest": "/api/index.go"
         }
     ],
-    "build": {
-        "command": "go run generate:token"
-      }
+    "buildCommand": "go run generate:token"
+
 }
