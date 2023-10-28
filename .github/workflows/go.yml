@@ -30,8 +30,9 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker buildx -t ${{ github.event.repository.name }}:latest .
-        docker buildx build -t ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest . --push
+        docker build -t ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest .
+        docker push ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
+      
 
       env:
         DOCKER_BUILDKIT: 1
