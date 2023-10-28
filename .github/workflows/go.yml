@@ -26,12 +26,12 @@ jobs:
       run: go build -v ./...
 
     - name: Login to GitHub Container Registry
-      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u ${{ github.repository_owner }} --password-stdin
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
     - name: Build and push Docker image
       run: |
-        docker build -t docker.pkg.github.com/${{ github.repository }}/jora:latest .
-        docker push docker.pkg.github.com/${{ github.repository }}/jora:latest
+        docker buildx create --use
+        docker buildx build -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}:latest . --push
 
-    - name: Cleanup
-      run: docker logout docker.pkg.github.com
+      env:
+        DOCKER_BUILDKIT: 1
