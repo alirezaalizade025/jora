@@ -26,35 +26,55 @@ var (
 )
 
 func GetTokens() {
-	// Public key
-	pubBytes, err := ioutil.ReadFile("public.pem")
-	if err != nil {
-		log.Fatalln(err)
-		os.Exit(1)
+
+	PublicKey = loadPublicKey()
+
+	PrivateKey = loadPrivateKey()
+}
+
+func loadPublicKey() *rsa.PublicKey {
+
+	var pubBytes []byte
+	var err error
+
+	if  pubBytes = []byte(Getenv("PUBLIC_KEY", "")); len(pubBytes) == 0 {
+		pubBytes, err = ioutil.ReadFile("public.pem")
+		if err != nil {
+			log.Fatalln(err)
+			os.Exit(1)
+		}
 	}
+
 
 	publicKey, err := jwt.ParseRSAPublicKeyFromPEM(pubBytes)
 	if err != nil {
 		log.Fatalln(err)
 		os.Exit(1)
 	}
+	return publicKey
+}
+
+func loadPrivateKey() *rsa.PrivateKey {
+
+	var privBytes []byte
+	var err error
+
+	if  privBytes = []byte(Getenv("PRIVATE_KEY", "")); len(privBytes) == 0 {
+		privBytes, err = ioutil.ReadFile("private.pem")
+		if err != nil {
+			log.Fatalln(err)
+			os.Exit(1)
+		}
+	}
 
 
-	// Private key
-	privBytes, err := ioutil.ReadFile("private.pem")
+	PrivateKey, err := jwt.ParseRSAPrivateKeyFromPEM(privBytes)
 	if err != nil {
 		log.Fatalln(err)
 		os.Exit(1)
 	}
-	
-	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(privBytes)
-	if err != nil {
-		log.Fatalln(err)
-		os.Exit(1)
-	}
 
-	PublicKey = publicKey
-	PrivateKey = privateKey
+	return PrivateKey
 }
 
 type TokenDetails struct {
