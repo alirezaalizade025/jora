@@ -19,7 +19,7 @@ func CreateDatabase(databaseName string) {
 	timezone := getenv("DB_TIMEZONE", "Asia/Tehran")
 
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s sslmode=disable TimeZone=%s", host, port, user, password, timezone)
-
+	fmt.Println("22:" + dsn)
 	DB, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	// createDatabaseCommand := fmt.Sprintf("DROP DATABASE %s", databaseName)
@@ -48,7 +48,7 @@ func ConnectDataBase() {
 	sslmode := getenv("DB_SSLMODE", "disable")
 
 	dsn := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", host, port, dbname, user, password, sslmode)
-
+	fmt.Println("51:" + dsn)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		// Logger: logger.Default.LogMode(logger.Silent),
 		PrepareStmt: true,
