@@ -3,11 +3,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "/.*",
+      "src": "*.go",
       "use": "@vercel/go"
     },
     {
-      "src": "/frontend/package.json",
+      "src": "frontend/package.json",
       "use": "@vercel/next"
     }
   ],
