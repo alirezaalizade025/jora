@@ -1,9 +1,21 @@
 {
-    "version": 2,
-    "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "/api/index.go"
-        }
-    ]
+  "version": 2,
+  "projects": [
+    {
+      "name": "api",
+      "rootDirectory": "api",
+      "buildCommand": "go build -o main"
+    },
+    {
+      "name": "frontend",
+      "rootDirectory": "frontend",
+      "frameworkPresets": ["nextjs"]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "~/api/:path*"
+    }
+  ]
 }
