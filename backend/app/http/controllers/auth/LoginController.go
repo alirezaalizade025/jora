@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	request "jora/app/http/requests"
-	userModel "jora/app/models/user"
+	userModel "jora/app/models"
 	"jora/database/postgres"
 	"jora/utility"
 )
@@ -52,34 +52,6 @@ func LoginCheck(registerNumber string, password string) (string, error) {
 		return "", err
 	}
 	
-	token, err := utility.GenerateToken(u.ID)
-	
-	if err != nil {
-		return "", err
-	}
-
 	// todo: do action if with same client id and user id login again
-	
-	err = SaveUserLoginData(u.ID, token)
-
-	return token, err
-}
-
-func SaveUserLoginData(user_id uint, tok string) error {
-
-	db := postgres.DB
-
-	if tok == "" {
-		return errors.New("token is empty")
-	}
-
-	td := &utility.TokenDetails{}
-	td.AccessToken = tok
-	// extract expire time from token string
-	claims := utility.ExtractTokenClaim(tok)
-	td.AtExpires = int64(claims["exp"].(float64))
-
-	td.UserID = user_id
-
-	return db.Save(&td).Error
+	return utility.CreateToken(u)
 }

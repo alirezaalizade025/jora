@@ -17,6 +17,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 
+	"jora/config"
+	"jora/database/postgres"
 	db "jora/database/postgres"
 )
 
@@ -81,13 +83,13 @@ type TokenDetails struct {
 	gorm.Model
 
 	UserID       uint   `json:"user_id"`
+	Guard        string `json:"guard"`
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 	AccessUuid   string `json:"access_uuid"`
 	RefreshUuid  string `json:"refresh_uuid"`
 	AtExpires    int64  `json:"at_expires"`
 	RtExpires    int64  `json:"rt_expires"`
-	Guard        string `json:"guard"`
 	Revoke       bool   `json:"revoke" gorm:"default:false"`
 }
 
@@ -163,9 +165,16 @@ func TokenCheckDb(c *gin.Context) error {
 		return errors.New("TOKEN IS EXPIRED")
 	}
 
+	path := c.Request.URL.Path
+
+	guard, ok := config.Guards[path]
+	if ! ok {
+		return errors.New("GUARD NOT FOUND")
+	}
+
 	// expire on database (check uuid for that user id)
 	var td TokenDetails
-	row := db.DB.Where("access_token = ?", tokenString).Where("user_id = ?", claims["user_id"]).First(&td)
+	row := db.DB.Where("access_token = ?", tokenString).Where("guard = ?", guard).Where("user_id = ?", claims["user_id"]).First(&td)
 
 	// if token not exists
 	if row.RowsAffected == 0 {
@@ -234,4 +243,41 @@ func Logout(access_token string) {
 	td.Revoke = true
 
 	db.DB.Save(&td)
+}
+
+
+type authenticatable interface {
+	GetID() uint
+	GetGuard() string
+}
+
+func CreateToken(u authenticatable) (string, error) {
+	token, err := GenerateToken(u.GetID())
+
+	if err != nil {
+		return "", err
+	}
+
+	err = SaveUserLoginData(u.GetID(), u.GetGuard(), token)
+
+	return token, err
+}
+
+func SaveUserLoginData(user_id uint, guard string, tok string) error {
+
+	db := postgres.DB
+
+	if tok == "" {
+		return errors.New("token is empty")
+	}
+
+	td := &TokenDetails{}
+	td.AccessToken = tok
+	// extract expire time from token string
+	claims := ExtractTokenClaim(tok)
+	td.AtExpires = int64(claims["exp"].(float64))
+	td.Guard = guard
+	td.UserID = user_id
+
+	return db.Save(&td).Error
 }

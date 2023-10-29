@@ -2,6 +2,7 @@ package routes
 
 import (
 	"jora/app/http/controllers/attendanceController"
+	panelAuthController "jora/app/http/controllers/panel/auth"
 	"jora/app/http/controllers/auth"
 	"jora/app/http/middleware"
 	"jora/utility"
@@ -47,6 +48,9 @@ func Register() {
 
 	// todo: manager check
 
+	panel()
+
+
 	if (utility.Getenv("SERVE_MODE", "naturel") == "naturel") {
 		r.Run(":8181")
 	}
@@ -62,8 +66,10 @@ func panel() {
 	// add api/panel prefix
 	panel := r.Group("/api/panel")
 
-	panel.Use()
-
+	
+	panel.POST("/register", panelAuthController.Register)
+	
+	panel.Use(middleware.JwtAuthMiddleware())
 }
 
 // @ vercel

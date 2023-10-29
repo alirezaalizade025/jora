@@ -78,6 +78,12 @@ func msgForTag(request request, tag validator.FieldError) string {
 		return field + " must be a valid datetime"
 	case "in":
 		return field + " is not valid" // todo: dynamic message
+	case "min":
+		return field + " minimum param is " + tag.Param()
+	case "max":
+		return field + " maximum param is " + tag.Param()
+	case "eqfield":
+		return field + " must equal with " + tag.Param()
 	}
 	return tag.Error()
 }
