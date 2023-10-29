@@ -45,11 +45,8 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           #!/bin/bash
-          # Pull the latest Docker image from the container registry on the server
-          docker pull ghcr.io/your-username/your-repo:latest
-          # Stop the existing containers (if any)
+          docker pull ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
           docker-compose -f /path/to/docker-compose.yml down
-          # Start the updated containers with the new image
           docker-compose -f /path/to/docker-compose.yml up -d
 
           
