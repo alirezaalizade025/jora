@@ -9,7 +9,7 @@
     {
       "src": "main.go",
       "use": "@vercel/go"
-    },
+    }
   ],
   "routes": [
     {
@@ -19,7 +19,7 @@
     {
       "src": "/api/(.*)",
       "dest": "/api/index.go"
-    },
+    }
   ],
   "env": {
     "NEXT_PUBLIC_API_BASE_URL": "https://jora-smoky.vercel.app/api"
