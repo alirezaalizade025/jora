@@ -14,7 +14,7 @@
   "routes": [
     {
       "src": "api/(.*)",
-      "dest": "main.go"
+      "dest": "api/index.go"
     },
     {
       "src": "/fr",
