@@ -17,7 +17,7 @@
       "dest": "/frontend/$1"
     },
     {
-      "src": "/api/v1/(.*)",
+      "src": "/api/(.*)",
       "dest": "/api/index.go"
     }
   ],
