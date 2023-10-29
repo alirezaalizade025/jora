@@ -7,7 +7,7 @@
       "use": "@vercel/go"
     },
     {
-      "src": "/frontend/.*",
+      "src": "/frontend/package.json",
       "use": "@vercel/next"
     }
   ],
