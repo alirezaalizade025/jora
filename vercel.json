@@ -5,10 +5,6 @@
     {
       "src": "frontend/package.json",
       "use": "@vercel/next"
-    },
-    {
-      "src": "api/index.go",
-      "use": "@vercel/go"
     }
   ],
   "routes": [
