@@ -1,9 +1,27 @@
 {
-    "version": 2,
-    "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "/api/index.go"
-        }
-    ]
+  "name": "my-project",
+  "version": 2,
+  "builds": [
+    {
+      "src": "/api/.*",
+      "use": "@vercel/go"
+    },
+    {
+      "src": "/frontend/.*",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/.*",
+      "dest": "/api/index"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_API_BASE_URL": "https://jora-smoky.vercel.app/api"
+  }
 }
