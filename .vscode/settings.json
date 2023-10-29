@@ -6,5 +6,9 @@
         "joho",
         "jora",
         "oneof"
-    ]
+    ],
+    "deepscan.ignoreConfirmWarning": true,
+    "files.eol": "\n",
+    "files.trimFinalNewlines": true,
+    "editor.formatOnSave": true,
 }

@@ -1,0 +1,360 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  -webkit-text-size-adjust: 100%;
+  --side-nav-width: 220px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  color: #ebebf0;
+  background: #111827;
+}
+
+#__next {
+  height: 100%;
+}
+
+* {
+  outline: none;
+}
+
+main {
+  display: block;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+hr {
+  box-sizing: content-box;
+  height: 0;
+  overflow: visible;
+}
+pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+a {
+  background-color: transparent;
+  color: inherit;
+
+  text-decoration: none;
+
+}
+abbr[title] {
+  border-bottom: none;
+  text-decoration: underline;
+  text-decoration: underline dotted;
+}
+b,
+strong {
+  font-weight: bolder;
+}
+code,
+kbd,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+small {
+  font-size: 70%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sub {
+  bottom: -0.25em;
+}
+sup {
+  top: -0.5em;
+}
+img {
+  border-style: none;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+button,
+input {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+
+[type='button']:not(:disabled),
+[type='reset']:not(:disabled),
+[type='submit']:not(:disabled),
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button,
+[type=\"button\"],
+[type=\"reset\"],
+[type=\"submit\"] {
+  -webkit-appearance: button;
+}
+button::-moz-focus-inner,
+[type=\"button\"]::-moz-focus-inner,
+[type=\"reset\"]::-moz-focus-inner,
+[type=\"submit\"]::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+button:-moz-focusring,
+[type=\"button\"]:-moz-focusring,
+[type=\"reset\"]:-moz-focusring,
+[type=\"submit\"]:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+fieldset {
+  padding: 0.35em 0.75em 0.625em;
+}
+legend {
+  box-sizing: border-box;
+  color: inherit;
+  display: table;
+  max-width: 100%;
+  padding: 0;
+  white-space: normal;
+}
+progress {
+  vertical-align: baseline;
+}
+textarea {
+  overflow: auto;
+}
+[type=\"checkbox\"],
+[type=\"radio\"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+[type=\"number\"]::-webkit-inner-spin-button,
+[type=\"number\"]::-webkit-outer-spin-button {
+  height: auto;
+}
+[type=\"search\"] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px;
+}
+[type=\"search\"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+details {
+  display: block;
+}
+summary {
+  display: list-item;
+}
+template {
+  display: none;
+}
+[hidden] {
+  display: none;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+@font-face {
+  font-family: 'JISXV';
+  src: url('/static/fonts/IRANSansXV-v2.woff') format('woff-variations'),
+    url('/static/fonts/IRANSansXV-v2.woff') format('woff');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JISX';
+  src: url('/static/fonts/IRANSansX-Regular-v2.woff') format('woff');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JISX';
+  src: url('/static/fonts/IRANSansX-Bold-v2.woff') format('woff');
+  font-weight: 700;
+  font-display: swap;
+}
+
+body {
+  font-family: 'JISX', sans-serif, 'OpenSansRegular', Helvetica, Arial;
+  direction: rtl;
+  font-weight: 400;
+  font-feature-settings: 'ss02';
+  -moz-font-feature-settings: 'ss02';
+  -webkit-font-feature-settings: 'ss02';
+}
+
+
+
+@supports (font-variation-settings: normal) {
+  body {
+    font-family: 'JISXV', tahoma;
+    font-variation-settings: 'wght' 500, 'rdot' 0;
+  }
+}
+
+body.hide-scroll {
+  overflow: hidden;
+}
+
+@media screen and (min-width: 1024px) {
+  body.hide-scroll {
+    padding-right: 17px;
+  }
+}
+
+body.ltr {
+  direction: ltr;
+}
+
+.direction-ltr {
+  direction: ltr;
+}
+
+#page-loading {
+  position: absolute;
+  z-index: 99999999;
+  right: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  opacity: 0;
+  will-change: opacity;
+  pointer-events: none;
+  transition: opacity 120ms linear;
+  contain: layout style size;
+}
+
+#page-loading.dark {
+  background-color: #333;
+}
+
+#page-loading.loading {
+  opacity: 1;
+  position: fixed;
+  pointer-events: initial;
+}
+
+:root {
+  --safe-area-top: 0px;
+  --safe-area-bottom: 0px;
+}
+
+@supports (bottom: constant(safe-area-inset-bottom)) {
+  :root {
+    --safe-area-top: constant(safe-area-inset-top);
+    --safe-area-bottom: constant(safe-area-inset-bottom);
+  }
+}
+
+@supports (bottom: env(safe-area-inset-bottom)) {
+  :root {
+    --safe-area-top: env(safe-area-inset-top);
+    --safe-area-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/**
+ * Disable auto-zoom on iphone input field focus 
+ */
+body.ios select,
+body.ios textarea,
+body.ios input {
+  font-size: 16px !important;
+}
+
+strong {
+  font-weight: 700;
+  font-variation-settings: 'whgt' 700;
+}
+
+.text-critical {
+  color: red;
+}
+
+.leaflet-container {
+  background-color: transparent !important;
+}
+
+body.e2e * {
+  background-image: unset !important;
+  animation: unset !important;
+  transition: none;
+}
+body.e2e *::before {
+  background-image: unset !important;
+  transition: none;
+}
+
+body.e2e img {
+  opacity: 0;
+}
+
+body.e2e .leaflet-container {
+  opacity: 0;
+}
+
+.noscript-message {
+  display: block;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  z-index: 1000;
+  background: #f00;
+  text-align: center;
+  color: #fff;
+  line-height: 2;
+  padding: 0 16px;
+  border-radius: 8px 8px 0 0;
+}
+
+body.drawer-open {
+  overflow: hidden;
+  padding-right: 15px;
+}

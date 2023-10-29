@@ -1,0 +1,81 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:promise/recommended",
+    "plugin:sonarjs/recommended",
+    "plugin:unicorn/recommended",
+    "plugin:compat/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": ["prettier", "promise", "sonarjs", "unicorn", "compat", "@typescript-eslint"],
+  "rules": {
+    "prettier/prettier": ["error", {
+      "endOfLine":"auto"
+    }],
+    "arrow-body-style": "off",
+    "prefer-arrow-callback": "off",
+    "handle-callback-err": [2, "^.*(e|E)rr"],
+    "sonarjs/no-nested-template-literals": "off",
+    "sonarjs/prefer-immediate-return": "off",
+    "sonarjs/no-redundant-boolean": "off",
+    "sonarjs/no-small-switch": "off",
+    "sonarjs/cognitive-complexity": "off",
+    "sonarjs/no-duplicate-string": "warn",
+    "sonarjs/no-identical-functions": "warn",
+    "unicorn/no-array-for-each": "off",
+    "unicorn/prevent-abbreviations": "off",
+    "unicorn/prefer-code-point": "off",
+    "unicorn/no-nested-ternary": "warn",
+    "unicorn/text-encoding-identifier-case": "off",
+    "unicorn/consistent-function-scoping": "warn",
+    "unicorn/filename-case": "off",
+    "unicorn/import-style": "off",
+    "unicorn/prefer-dom-node-append": "off",
+    "unicorn/prefer-dom-node-remove": "off",
+    "unicorn/new-for-builtins": "off",
+    "unicorn/prefer-node-protocol": "off",
+    "unicorn/prefer-module": "off",
+    "unicorn/prefer-query-selector": "off",
+    "unicorn/no-useless-undefined": "off",
+    "unicorn/no-null": "off",
+    "unicorn/no-this-assignment": "off",
+    "unicorn/no-array-reduce": "off",
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-empty-function": "warn",
+    "@typescript-eslint/ban-types": "warn",
+    "@next/next/no-img-element": "warn",
+    "no-magic-numbers": "off",
+    "prefer-const": 1,
+    "compat/compat": "warn",
+    "complexity": [1, 12],
+    "promise/always-return": "off",
+    "promise/catch-or-return": [
+      "warn",
+      {
+        "allowFinally": true
+      }
+    ],
+    "react-hooks/exhaustive-deps": [
+      "warn",
+      {
+        "additionalHooks": "(useIsomorphicLayoutEffect)"
+      }
+    ],
+    "react/display-name": ["off"],
+    "react/jsx-no-bind": [
+      "off",
+      {
+        "allowArrowFunctions": false
+      }
+    ],
+    "react/no-unescaped-entities": "off",
+    "import/no-anonymous-default-export": "off"
+  },
+  "settings": {
+    "polyfills": ["Promise"]
+  }
+}
