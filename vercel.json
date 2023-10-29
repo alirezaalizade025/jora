@@ -13,12 +13,12 @@
   ],
   "routes": [
     {
-      "src": "api/(.*)",
-      "dest": "/api/index.go"
-    },
-    {
       "src": "/(.*)",
       "dest": "/frontend/$1"
+    },
+    {
+      "src": "api/(.*)",
+      "dest": "/api/index.go"
     }
   ],
   "env": {
