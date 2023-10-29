@@ -3,12 +3,12 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.go",
-      "use": "@vercel/go"
-    },
-    {
       "src": "frontend/package.json",
       "use": "@vercel/next"
+    },
+    {
+      "src": "api/index.go",
+      "use": "@vercel/go"
     }
   ],
   "routes": [
