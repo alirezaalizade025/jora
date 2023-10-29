@@ -53,6 +53,19 @@ func Register() {
 
 }
 
+func panel() {
+
+	r := app
+
+	r.Use(gin.Logger())
+
+	// add api/panel prefix
+	panel := r.Group("/api/panel")
+
+	panel.Use()
+
+}
+
 // @ vercel
 var (
 	app *gin.Engine

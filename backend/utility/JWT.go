@@ -87,6 +87,7 @@ type TokenDetails struct {
 	RefreshUuid  string `json:"refresh_uuid"`
 	AtExpires    int64  `json:"at_expires"`
 	RtExpires    int64  `json:"rt_expires"`
+	Guard        string `json:"guard"`
 	Revoke       bool   `json:"revoke" gorm:"default:false"`
 }
 
