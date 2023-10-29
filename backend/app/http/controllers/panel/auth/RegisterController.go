@@ -40,6 +40,8 @@ func Register(c *gin.Context) {
 		Password: req.Password,
 	}
 
+	newCompany.SetPassword()
+
 	var token string
 	var err error
 

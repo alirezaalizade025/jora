@@ -68,6 +68,7 @@ func panel() {
 
 	
 	panel.POST("/register", panelAuthController.Register)
+	panel.POST("/login", panelAuthController.Login)
 	
 	panel.Use(middleware.JwtAuthMiddleware())
 }

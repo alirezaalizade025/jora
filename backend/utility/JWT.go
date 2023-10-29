@@ -94,6 +94,8 @@ type TokenDetails struct {
 }
 
 func GenerateToken(user_id uint) (string, error) {
+	// todo: limit generate token by time
+
 	var err error
 
 	if PrivateKey != nil || PublicKey != nil {

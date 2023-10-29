@@ -1,8 +1,10 @@
 package model
 
 import (
+	"log"
 	"time"
 
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -27,4 +29,23 @@ func (Company) GetGuard() string {
 // getID implements utility.authenticatable.
 func (company Company) GetID() uint {
 	return company.ID
+}
+
+
+
+//==============================================================================//
+//																			    //
+//                                  Setters										//
+//																			    //
+//==============================================================================//
+
+func (company *Company) SetPassword() {
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(company.Password), bcrypt.DefaultCost)
+	if err != nil {
+		log.Panic(err.Error())
+	}
+
+
+	company.Password = string(hash)
 }
