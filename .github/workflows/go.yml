@@ -26,7 +26,7 @@ jobs:
         go-version: '1.18'
 
     - name: Build Go app
-      run: go build -v ./...
+      run: go build -v ./.../backend
 
     - name: Login to GitHub Container Registry
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
