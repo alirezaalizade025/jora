@@ -7,9 +7,9 @@
       "use": "@vercel/next"
     },
     {
-      "src": "api/index.go",
+      "src": "main.go",
       "use": "@vercel/go"
-    }
+    },
   ],
   "routes": [
     {
@@ -17,9 +17,9 @@
       "dest": "/frontend/$1"
     },
     {
-      "src": "/api/.*",
+      "src": "/api/(.*)",
       "dest": "/api/index.go"
-    }
+    },
   ],
   "env": {
     "NEXT_PUBLIC_API_BASE_URL": "https://jora-smoky.vercel.app/api"
