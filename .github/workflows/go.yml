@@ -36,8 +36,20 @@ jobs:
       env:
         DOCKER_BUILDKIT: 1
 
+
     - name: Deploy to Server
-      run: |
-        ssh user@your-server-ip 'bash -s' < deploy.sh
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          #!/bin/bash
+          # Pull the latest Docker image from the container registry on the server
+          docker pull ghcr.io/your-username/your-repo:latest
+          # Stop the existing containers (if any)
+          docker-compose -f /path/to/docker-compose.yml down
+          # Start the updated containers with the new image
+          docker-compose -f /path/to/docker-compose.yml up -d
+
+          
