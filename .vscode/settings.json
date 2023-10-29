@@ -1,14 +1,15 @@
 {
-    "cSpell.words": [
-        "datetime",
-        "gonic",
-        "gorm",
-        "joho",
-        "jora",
-        "oneof"
-    ],
-    "deepscan.ignoreConfirmWarning": true,
-    "files.eol": "\n",
-    "files.trimFinalNewlines": true,
-    "editor.formatOnSave": true,
+  "cSpell.words": [
+    "datetime",
+    "gonic",
+    "gorm",
+    "joho",
+    "jora",
+    "oneof",
+    "samber"
+  ],
+  "deepscan.ignoreConfirmWarning": true,
+  "files.eol": "\n",
+  "files.trimFinalNewlines": true,
+  "editor.formatOnSave": true
 }
