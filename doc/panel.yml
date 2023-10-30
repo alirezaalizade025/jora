@@ -1,0 +1,286 @@
+openapi: 3.0.0
+info:
+  title: Your API Title
+  version: 1.0.0
+
+servers:
+  - url: https://www.straxico.ir/api/panel
+
+paths:
+  /register:
+    post:
+      tags:
+        - "Auth"
+      summary: "Register a new user"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 2
+                  maxLength: 50
+                phone:
+                  type: string
+                  minLength: 11
+                  maxLength: 11
+                password:
+                  type: string
+                  minLength: 4
+                  maxLength: 20
+                confirm_password:
+                  type: string
+      responses:
+        200:
+          description: "User registered successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  token:
+                    type: "string"
+  /login:
+    post:
+      tags:
+        - "Auth"
+      summary: "User login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                  minLength: 11
+                  maxLength: 11
+                password:
+                  type: string
+                  minLength: 4
+                  maxLength: 20
+      responses:
+        200:
+          description: "User registered successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  token:
+                    type: "string"
+
+  /users:
+    get:
+      tags:
+        - "Users"
+      summary: "Users List"
+
+      parameters:
+        - name: "user"
+          in: "query"
+          description: "Filter by user name or id"
+          required: false
+          schema:
+            type: "string"
+        - name: "team_id"
+          in: "query"
+          description: "Filter by user team id"
+          required: false
+          schema:
+            type: "string"
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/PerPageParam"
+
+      responses:
+        200:
+          description: "User list retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: "integer"
+                        first_name:
+                          type: "string"
+                        last_name:
+                          type: "string"
+                        register_number:
+                          type: "string"
+                        avatar:
+                          type: "string"
+                        team:
+                          type: "object"
+                          properties:
+                            id:
+                              type: integer
+                            title:
+                              type: string
+                        created_at:
+                          type: "string"
+                        deleted_at:
+                          type: "string"
+    post:
+      tags:
+        - "Users"
+      summary: "Create a new user"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - first_name
+                - last_name
+
+              properties:
+                first_name:
+                  type: "string"
+                last_name:
+                  type: "string"
+                register_number:
+                  type: "string"
+                team_id:
+                  type: "string"
+
+      responses:
+        200:
+          description: "User updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResource"
+        400:
+          description: "Bad Request"
+        500:
+          description: "Internal Server Error"
+  /users/{id}:
+
+    put:
+      tags:
+        - "Users"
+      summary: "Create a new user"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+
+              properties:
+                first_name:
+                  type: "string"
+                last_name:
+                  type: "string"
+                register_number:
+                  type: "string"
+                avatar:
+                  type: "string"
+                team_id:
+                  type: "string"
+
+      responses:
+        200:
+          description: "User updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResource"
+        400:
+          description: "Bad Request"
+        500:
+          description: "Internal Server Error"
+
+    delete:
+      tags:
+        - "Users"
+      summary: "Create a new user"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "User deleted successfully"
+
+        400:
+          description: "Bad Request"
+        500:
+          description: "Internal Server Error"
+
+components:
+  schemas:
+    UserResource:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        first_name:
+          type: "string"
+        last_name:
+          type: "string"
+        register_number:
+          type: "string"
+        avatar:
+          type: "string"
+        team:
+          type: "object"
+          properties:
+            id:
+              type: integer
+            title:
+              type: string
+        created_at:
+          type: "string"
+        deleted_at:
+          type: "string"
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+        count:
+          type: integer
+        page:
+          type: integer
+        per_page:
+          type: integer
+
+
+
+  parameters:
+    PerPageParam:
+      name: per page
+      in: query
+      description: per page number
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 30
+    PageParam:
+      name: page
+      in: query
+      description: page number
+      schema:
+        type: integer
+        format: int32
+        minimum: 1

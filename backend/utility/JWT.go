@@ -168,6 +168,11 @@ func TokenCheckDb(c *gin.Context) error {
 	}
 
 	path := c.Request.URL.Path
+	if (strings.HasPrefix(path, "/api/panel")) {
+		path = "/api/panel"
+	} else if (strings.HasPrefix(path, "/api")) {
+		path = "/api"
+	}
 
 	guard, ok := config.Guards[path]
 	if ! ok {

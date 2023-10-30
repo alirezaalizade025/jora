@@ -2,13 +2,13 @@ package routes
 
 import (
 	"jora/app/http/controllers/attendanceController"
-	panelAuthController "jora/app/http/controllers/panel/auth"
 	"jora/app/http/controllers/auth"
+	panelAuthController "jora/app/http/controllers/panel/auth"
+	usersController "jora/app/http/controllers/panel/users"
 	"jora/app/http/middleware"
 	"jora/utility"
 	"net/http"
 
-	
 	"github.com/gin-gonic/gin"
 )
 
@@ -67,10 +67,17 @@ func panel() {
 	panel := r.Group("/api/panel")
 
 	
+	// auth
 	panel.POST("/register", panelAuthController.Register)
 	panel.POST("/login", panelAuthController.Login)
-	
+
+
 	panel.Use(middleware.JwtAuthMiddleware())
+	// users
+	panel.GET("/users", usersController.Index)
+	panel.POST("/users", usersController.Create)
+	
+
 }
 
 // @ vercel

@@ -47,3 +47,10 @@ func InArray(a string, list []string) bool {
     }
     return false
 }
+
+func If[T any](cond bool, vtrue, vfalse T) T {
+    if cond {
+        return vtrue
+    }
+    return vfalse
+}

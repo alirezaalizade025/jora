@@ -1,13 +1,15 @@
 package model
 
 import (
+	"jora/database/postgres"
+
 	"gorm.io/gorm"
 )
 
 type User struct {
 	gorm.Model
 
-	RegisterNumber string `json:"register_number" gorm:"uniqueIndex"`
+	RegisterNumber uint `json:"register_number" gorm:"uniqueIndex"`
 
 	CompanyID uint    `json:"company_id" gorm:"index"` // Foreign key column with index
 	Company   Company `gorm:"foreignkey:CompanyID"`
@@ -16,6 +18,8 @@ type User struct {
 	LastName  string `json:"last_name"`
 	Avatar    string `json:"avatar" gorm:"default:null"`
 	Password  string `json:"password"`
+
+	TeamID uint `json:"team_id" gorm:"index"` // Foreign key column with index
 
 	// each user can has many team leads
 	TeamLeads  []*User `json:"team_leads" gorm:"many2many:team_leads"`
@@ -30,4 +34,11 @@ func (u User) GetGuard() string {
 // getID implements utility.authenticatable.
 func (u User) GetID() uint {
 	return u.ID
+}
+
+
+func (u User) GetTeam() (team map[string]interface{}) {
+
+	postgres.DB.Where("team_id = ?", u.TeamID).First(&team)
+	return team
 }

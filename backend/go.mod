@@ -15,12 +15,14 @@ require (
 
 require (
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
+	github.com/golang-module/carbon/v2 v2.2.11 // indirect
 	github.com/golang/protobuf v1.5.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	github.com/samber/lo v1.38.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/yaa110/go-persian-calendar v1.1.5 // indirect
 	golang.org/x/exp v0.0.0-20221208152030-732eee02a75a // indirect
 	golang.org/x/net v0.9.0 // indirect
 	gopkg.in/go-playground/validator.v9 v9.29.1 // indirect
