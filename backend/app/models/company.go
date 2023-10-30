@@ -13,7 +13,7 @@ type Company struct {
 
 	Title    string    `json:"title" gorm:"uniqueIndex"`
 	Phone    string    `json:"phone"  gorm:"uniqueIndex"`
-	CreditTo time.Time `json:"credit_to"`
+	CreditTo *time.Time `json:"credit_to" gorm:"default:null"`
 
 	Password string `json:"password"`
 
