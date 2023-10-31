@@ -76,6 +76,9 @@ func panel() {
 	// users
 	panel.GET("/users", usersController.Index)
 	panel.POST("/users", usersController.Create)
+	panel.GET("/users/:id", usersController.Show)
+	panel.PUT("/users/:id", usersController.Update)
+	panel.DELETE("/users/:id", usersController.Delete)
 	
 
 }

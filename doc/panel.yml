@@ -164,7 +164,31 @@ paths:
           description: "Bad Request"
         500:
           description: "Internal Server Error"
+
   /users/{id}:
+
+    get:
+      tags:
+        - "Users"
+      summary: "Create a new user"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        200:
+          description: "User updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResource"
+        400:
+          description: "Bad Request"
+        500:
+          description: "Internal Server Error"
 
     put:
       tags:

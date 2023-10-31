@@ -9,21 +9,17 @@ import (
 type User struct {
 	gorm.Model
 
-	RegisterNumber uint `json:"register_number" gorm:"uniqueIndex"`
-
-	CompanyID uint    `json:"company_id" gorm:"index"` // Foreign key column with index
+	RegisterNumber uint `json:"register_number" gorm:"uniqueIndex:idx_users_company_id"`
+	
+	CompanyID uint    `json:"company_id" gorm:"uniqueIndex:idx_users_company_id"`
 	Company   Company `gorm:"foreignkey:CompanyID"`
-
+	
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
 	Avatar    string `json:"avatar" gorm:"default:null"`
 	Password  string `json:"password"`
 
-	TeamID uint `json:"team_id" gorm:"index"` // Foreign key column with index
-
-	// each user can has many team leads
-	TeamLeads  []*User `json:"team_leads" gorm:"many2many:team_leads"`
-	TemMembers []*User `json:"team_members" gorm:"many2many:team_leads"`
+	TeamID uint `json:"team_id" gorm:"index"`
 }
 
 // getGuard implements utility.authenticatable.

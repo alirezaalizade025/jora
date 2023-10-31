@@ -42,6 +42,7 @@ func main() {
 	postgres.DB.AutoMigrate(&attendanceModel.Attendance{})
 	postgres.DB.AutoMigrate(&teamLeadModel.TeamLead{})
 	postgres.DB.AutoMigrate(&model.Company{})
+	postgres.DB.AutoMigrate(&model.Team{})
 
 	routes.Register()
 }

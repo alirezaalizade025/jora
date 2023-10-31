@@ -25,7 +25,7 @@ func Index(c *gin.Context) {
 
 	authId, exists := c.Get("userId")
 	if !exists {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{})
+		c.JSON(http.StatusUnauthorized, gin.H{})
 		return
 	}
 
@@ -66,15 +66,14 @@ func Create(c *gin.Context) {
 
 	authId, exists := c.Get("userId")
 	if !exists {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{})
+		c.JSON(http.StatusUnauthorized, gin.H{})
 		return
 	}
 
-
 	var count int64
-	companyQuery(authId).Where("CONCAT(first_name, ' ', last_name) = ?", req.FirstName + " " + req.LastName).Count(&count)
+	companyQuery(authId).Where("CONCAT(first_name, ' ', last_name) = ?", req.FirstName+" "+req.LastName).Count(&count)
 	if count > 0 {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "user exists!"})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "user with name exists!"})
 		return
 	}
 
@@ -96,20 +95,127 @@ func Create(c *gin.Context) {
 			c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "team not exists!"})
 			return
 		}
-	} 
+	}
 
 	newUser := model.User{
-		CompanyID: uint(authId.(float64)),
+		CompanyID:      uint(authId.(float64)),
 		RegisterNumber: req.RegisterNumber,
-		FirstName: req.FirstName,
-		LastName: req.LastName,
-		TeamID: req.TeamId,
-		
+		FirstName:      req.FirstName,
+		LastName:       req.LastName,
+		TeamID:         req.TeamId,
 	}
 
 	postgres.DB.Save(&newUser)
 
 	c.JSON(http.StatusAccepted, resource.UserShowResource(newUser))
+}
+
+
+func Show(c *gin.Context) {
+
+	authId := uint(c.GetFloat64("userId"))
+	if authId == 0 {
+		c.JSON(http.StatusUnauthorized, gin.H{})
+		return
+	}
+
+	var user model.User
+	err := companyQuery(authId).Where("id = ?", c.Param("id")).First(&user)
+	if err.Error != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "USER NOT FOUND!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, resource.UserShowResource(user))
+}
+
+func Update(c *gin.Context) {
+
+	req := &request.PanelUsersUpdateRequest{}
+	if !request.Validation(c, req) {
+		return
+	}
+
+	authId := uint(c.GetFloat64("userId"))
+	if authId == 0 {
+		c.JSON(http.StatusUnauthorized, gin.H{})
+		return
+	}
+
+	var user model.User
+	err := companyQuery(authId).Where("id = ?", c.Param("id")).First(&user)
+
+	if err.Error != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "USER NOT FOUND!"})
+		return
+	}
+
+	var count int64
+	if req.RegisterNumber != nil {
+		companyQuery(authId).Where("id != ?", c.Param("id")).Where("register_number = ?", *req.RegisterNumber).Count(&count)
+
+		if count > 0 {
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "register_number exists!"})
+			return
+		}
+
+		user.RegisterNumber = *req.RegisterNumber
+	}
+
+	if req.TeamId != nil {
+		postgres.DB.Model(model.Team{}).Where("company_id = ?", authId).Where("team_id = ?", *req.TeamId).Count(&count)
+		if count == 0 {
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "team not exists!"})
+			return
+		}
+
+		user.TeamID = *req.TeamId
+	}
+
+	if req.FirstName != nil {
+		companyQuery(authId).Where("id != ?", c.Param("id")).Where("CONCAT(first_name, ' ', last_name) = ?", *req.FirstName + " " + user.LastName).Count(&count)
+		if count > 0 {
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "user with name exists!"})
+			return
+		}
+
+		user.FirstName = *req.FirstName
+
+	}
+
+	if req.LastName != nil {
+		companyQuery(authId).Where("id != ?", c.Param("id")).Where("CONCAT(first_name, ' ', last_name) = ?", user.FirstName + " "+ *req.LastName).Count(&count)
+		if count > 0 {
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "user with name exists!"})
+			return
+		}
+
+		user.LastName = *req.LastName
+	}
+
+	postgres.DB.Save(&user)
+
+	c.JSON(http.StatusOK, resource.UserShowResource(user))
+}
+
+func Delete(c *gin.Context) {
+
+	authId := uint(c.GetFloat64("userId"))
+	if authId == 0 {
+		c.JSON(http.StatusUnauthorized, gin.H{})
+		return
+	}
+
+	var user model.User
+	err := companyQuery(authId).Where("id = ?", c.Param("id")).First(&user)
+	if err.Error != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "USER NOT FOUND!"})
+		return
+	}
+
+	postgres.DB.Delete(&user)
+
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func companyQuery(authId interface{}) *gorm.DB {
@@ -122,7 +228,6 @@ func generateRegisterNumber(query *gorm.DB) (newRegisterNumber uint) {
 	var u model.User
 	err := query.Order("register_number DESC").First(&u)
 
-
 	if err == nil {
 		newRegisterNumber = u.RegisterNumber + 1
 	} else {
@@ -134,7 +239,7 @@ func generateRegisterNumber(query *gorm.DB) (newRegisterNumber uint) {
 		count = 1
 		for count != 0 {
 			registerNumber = fmt.Sprintf("%s%s", pt.Format("yyMM"), "1111")
-			print()
+
 			query.Where("register_number = ?", registerNumber).Count(&count)
 		}
 
