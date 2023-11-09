@@ -10,6 +10,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
 )
 
 func Register() {
@@ -61,7 +62,7 @@ func panel() {
 
 	r := app
 
-	r.Use(gin.Logger())
+	r.Use(gin.Logger(), cors.Default())
 
 	// add api/panel prefix
 	panel := r.Group("/api/panel")
