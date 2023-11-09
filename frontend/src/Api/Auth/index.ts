@@ -5,6 +5,11 @@ const login = async (props: LoginRequest) => {
   return response;
 };
 
+const register = async (props: RegisterRequest) => {
+  const response = await API.post<RegisterResponse>(`/panel/register`, props);
+  return response;
+};
+
 const logout = async () => {
   const response = await API.post(`/auth/logout`);
   return response;
@@ -13,6 +18,7 @@ const logout = async () => {
 const AuthApi = {
   login,
   logout,
+  register
 };
 
 export default AuthApi;
