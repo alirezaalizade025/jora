@@ -28,13 +28,13 @@ const Dashboard = () => {
     <Container maxWidth="sm">
       <Paper elevation={3} style={{ padding: '16px', textAlign: 'center' }}>
         <Typography variant="h4" gutterBottom>
-          صفحه حضور و عیاب
+          صفحه حضور و غیاب
         </Typography>
         <Divider style={{ margin: '16px 0' }} />
         {attendanceRecord ? (
           <div>
             <Typography variant="body1" gutterBottom>
-              ثبت حضور یا عیاب با موفقیت انجام شد.
+              ثبت حضور یا غیاب با موفقیت انجام شد.
             </Typography>
             <Typography variant="body2" gutterBottom>
               زمان: {new Date().toLocaleString()}

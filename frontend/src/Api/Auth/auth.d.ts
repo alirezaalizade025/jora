@@ -7,5 +7,5 @@ type LoginResponse = {
 };
 
 type RegisterResponse = {
-  jwtToken: string;
+  token: string;
 };
