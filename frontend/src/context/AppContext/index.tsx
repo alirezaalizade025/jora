@@ -18,7 +18,10 @@ const AppProvider = (props: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const needSeeAuth = useMemo(() => !(!state.jwt && pathname != '/auth'), [pathname, state.jwt]);
+  const needSeeAuth = useMemo(
+    () => !state.jwt && pathname != '/auth' && pathname != '/register',
+    [pathname, state.jwt],
+  );
 
   useEffect(() => {
     setIsMount(true);

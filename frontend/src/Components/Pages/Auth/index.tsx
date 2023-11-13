@@ -4,6 +4,8 @@ import { cookieGetter, cookieSetter } from 'utils/cookieUtils';
 import { useRouter } from 'next/navigation';
 import AuthApi from 'src/Api/Auth';
 import { appVersion } from 'utils/consts';
+import Link from 'next/link';
+import MuiLink from '@mui/material/Link';
 
 
 const Auth = () => {
@@ -35,7 +37,7 @@ const Auth = () => {
       .then((res) => {
         if (res.data.jwtToken) {
           cookieSetter({ name: 'jwt', content: res.data.jwtToken, maxAge: 'oneDay' });
-          window.location.replace('/');
+          window.location.replace('/panel/dashboard');
         }
         setIsLoading(false);
       })
@@ -50,7 +52,7 @@ const Auth = () => {
       <Paper elevation={3}>
         <Box p={3}>
           <Typography variant="h4" align="center" gutterBottom>
-            Your Logo
+            JORA
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -91,9 +93,18 @@ const Auth = () => {
           <Typography variant="body2" align="center">
             {appVersion}
           </Typography>
+          <Typography variant="body2" align="center">
+            برای ثبت نام شرکت جدید{' '}
+            <Link href={'/register'}>
+              <MuiLink>
+                اینجا
+              </MuiLink>
+            </Link>
+            کلیک کنید
+          </Typography>
         </Box>
       </Paper>
-    </Container>
+    </Container >
   );
 };
 

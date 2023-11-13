@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, TextField, Typography, Container, Box, Paper } from '@mui/material';
-import { cookieGetter, cookieSetter } from 'utils/cookieUtils';
-import { useRouter } from 'next/navigation';
+import { cookieSetter } from 'utils/cookieUtils';
 import AuthApi from 'src/Api/Auth';
 import { appVersion } from 'utils/consts';
-
+import Link from 'next/link';
+import MuiLink from '@mui/material/Link';
 
 const Register = () => {
   const [title, setTitle] = useState('');
@@ -35,8 +35,12 @@ const Register = () => {
       <Paper elevation={3}>
         <Box p={3}>
           <Typography variant="h4" align="center" gutterBottom>
-            Your Logo
+            JORA
           </Typography>
+          <Typography variant="h6" align="center" gutterBottom>
+            ثبت شرکت جدید
+          </Typography>
+
           <form onSubmit={handleSubmit}>
             <TextField
               variant="outlined"
@@ -93,17 +97,23 @@ const Register = () => {
               fullWidth
               variant="contained"
               color="primary"
-              disabled={isLoading}
-            >
+              disabled={isLoading}>
               {isLoading ? 'در حال ثبت نام...' : 'ثبت نام'}
             </Button>
           </form>
           <Typography variant="body2" align="center">
             {appVersion}
           </Typography>
+          <Typography variant="body2" align="center">
+            اگر قبلا ثبت نام کرده اید برای ورود
+            <Link href={'/auth'}>
+              <MuiLink>اینجا</MuiLink>
+            </Link>
+            کلیک کنید
+          </Typography>
         </Box>
       </Paper>
-    </Container >
+    </Container>
   );
 };
 

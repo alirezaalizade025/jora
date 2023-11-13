@@ -1,4 +1,3 @@
 'use client';
 
-export { default } from 'Pages/Dashboard';
-
+export { default } from 'Pages/UserDashboard';
