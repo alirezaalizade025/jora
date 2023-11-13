@@ -26,7 +26,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, gin.H{"jwt_token": token})
 }
 
 func LoginCheck(registerNumber string, password string) (string, error) {

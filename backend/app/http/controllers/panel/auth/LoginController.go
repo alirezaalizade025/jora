@@ -27,7 +27,7 @@ func Login(c *gin.Context) {
 	}
 
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, gin.H{"jwt_token": token})
 }
 
 func LoginCheck(mobile string, password string) (string, error) {

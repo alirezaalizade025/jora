@@ -67,5 +67,5 @@ func Register(c *gin.Context) {
 	})
 	// Commit the transaction if everything is successful.
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, gin.H{"jwt_token": token})
 }
