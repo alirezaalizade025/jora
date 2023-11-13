@@ -92,6 +92,8 @@ var (
 // @ vercel
 func init() {
 	app = gin.New()
+
+	app.Use(middleware.CORSMiddleware())
 }
 
 // @ vercel
