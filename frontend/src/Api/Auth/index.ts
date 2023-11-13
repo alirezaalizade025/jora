@@ -5,8 +5,14 @@ const login = async (props: LoginRequest) => {
   return response;
 };
 
+
 const register = async (props: RegisterRequest) => {
   const response = await API.post<RegisterResponse>(`/panel/register`, props);
+  return response;
+};
+
+const AdminLogin = async (props: AdminLoginRequest) => {
+  const response = await API.post<AdminLoginResponse>(`/panel/login`, props);
   return response;
 };
 
@@ -18,7 +24,8 @@ const logout = async () => {
 const AuthApi = {
   login,
   logout,
-  register
+  register,
+  AdminLogin,
 };
 
 export default AuthApi;

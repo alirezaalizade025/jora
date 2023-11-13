@@ -17,7 +17,7 @@ const Layout = ({ children }) => {
       <IconButton
         onClick={handleToggleSidebar}
         style={{ marginRight: '16px', marginLeft: '16px', marginTop: '16px' }}>
-        <MenuIcon color='info' />
+        <MenuIcon color="info" />
       </IconButton>
       <Container component="main" maxWidth="xs">
         <Paper elevation={3} style={{ display: 'flex' }}>

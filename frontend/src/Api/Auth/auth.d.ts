@@ -1,5 +1,11 @@
 type LoginRequest = { username: string; password: string; otp?: string };
+type AdminLoginRequest = { phone: string; password: string };
 type RegisterRequest = { phone: string; password: string; title: string, confirmPassword: string };
+
+type AdminLoginResponse = {
+  jwtToken: string;
+  otp?: boolean;
+};
 
 type LoginResponse = {
   jwtToken: string;
@@ -7,5 +13,5 @@ type LoginResponse = {
 };
 
 type RegisterResponse = {
-  token: string;
+  jwtToken: string;
 };

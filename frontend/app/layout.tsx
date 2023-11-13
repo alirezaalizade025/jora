@@ -7,11 +7,7 @@ export const metadata: Metadata = {
   viewport: { width: 1440 },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const lang = 'fa';
   const direction = 'rtl';
 

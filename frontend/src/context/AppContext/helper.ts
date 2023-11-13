@@ -12,7 +12,7 @@ export const getInitialState = (): AppContextState => {
   let channel = null;
   if (typeof window != 'undefined') {
     try {
-      channel = new BroadcastChannel<BroadcastChannelMessages>('kutam');
+      channel = new BroadcastChannel<BroadcastChannelMessages>('jora');
     } catch (error) {
       channel = null;
       console.log('BroadcastChannel is not supported', { e: error });

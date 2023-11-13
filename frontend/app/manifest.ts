@@ -2,9 +2,9 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'KUTAM',
-    short_name: 'KUTAM',
-    description: 'KUTAM APP',
+    name: 'JORA',
+    short_name: 'JORA',
+    description: 'JORA APP',
     start_url: '/',
     display: 'standalone',
     background_color: '#111827',
