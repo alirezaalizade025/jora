@@ -3,7 +3,7 @@ name: Build Frontend
 on:
   push:
     branches:
-      - master 
+      - master
 
 jobs:
   build:
@@ -11,6 +11,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
@@ -20,20 +21,24 @@ jobs:
       with:
         node-version: '19'
 
-
     - name: Install Dependencies
-      run: yarn install
-      working-directory: frontend/ 
+      run: |
+        cd frontend/
+        yarn install
 
-    - name: build front
-      run: yarn build
-      working-directory: frontend/ 
+    - name: Build Frontend
+      run: |
+        cd frontend/
+        yarn build
 
-    - name: 'Create env file'
+    - name: Create env file
       run: |
         touch frontend/.env.production
-        echo NEXT_PUBLIC_API_BASE_URL=${{ env.NEXT_PUBLIC_API_BASE_URL }} >> frontend/.env.production
+        echo NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }} >> frontend/.env.production
         cat frontend/.env.production
+
+    - name: Login to GitHub Container Registry
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
     - name: Build and push frontend Docker image
       run: |
