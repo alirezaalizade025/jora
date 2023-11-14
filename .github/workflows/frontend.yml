@@ -24,16 +24,16 @@ jobs:
     - name: Install Dependencies
       run: yarn install
       working-directory: frontend/ 
-      
+
     - name: build front
       run: yarn build
       working-directory: frontend/ 
 
     - name: 'Create env file'
       run: |
-        touch .env.production
-        echo NEXT_PUBLIC_API_BASE_URL=${{ env.NEXT_PUBLIC_API_BASE_URL }} >> .env
-        cat .env.production
+        touch frontend/.env.production
+        echo NEXT_PUBLIC_API_BASE_URL=${{ env.NEXT_PUBLIC_API_BASE_URL }} >> frontend/.env.production
+        cat frontend/.env.production
 
     - name: Build and push frontend Docker image
       run: |
