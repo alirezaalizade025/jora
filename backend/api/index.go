@@ -32,6 +32,8 @@ func Register() {
 	api.POST("/login", auth.Login) // todo: if user logged in redirect
 	api.POST("/logout", auth.Logout)
 
+	api.POST("/user-info", auth.UserInfo).Use(middleware.JwtAuthMiddleware())
+
 	// clockwise
 	clockwiseGroup := api.Group("/attendances").Use(middleware.JwtAuthMiddleware())
 
@@ -66,6 +68,8 @@ func panel() {
 
 	// add api/panel prefix
 	panel := r.Group("/api/panel")
+
+	panel.POST("/admin-info", auth.UserInfo).Use(middleware.JwtAuthMiddleware())
 
 	
 	// auth

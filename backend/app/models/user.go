@@ -20,6 +20,8 @@ type User struct {
 	Password  string `json:"password"`
 
 	TeamID uint `json:"team_id" gorm:"index"`
+
+	Roles    []Role `gorm:"many2many:user_roles;"`
 }
 
 // getGuard implements utility.authenticatable.
