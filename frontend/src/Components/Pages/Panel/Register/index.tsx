@@ -18,8 +18,8 @@ const Register = () => {
     setIsLoading(true);
     AuthApi.register({ confirmPassword, password, phone, title })
       .then((res) => {
-        if (res.data.token) {
-          cookieSetter({ name: 'jwt', content: res.data.token, maxAge: 'oneDay' });
+        if (res.data.jwtToken) {
+          cookieSetter({ name: 'jwt', content: res.data.jwtToken, maxAge: 'oneDay' });
           window.location.replace('/panel');
         }
         setIsLoading(false);
