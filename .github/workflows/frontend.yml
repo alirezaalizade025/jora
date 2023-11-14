@@ -20,13 +20,20 @@ jobs:
       with:
         node-version: '19'
 
+
     - name: Install Dependencies
       run: yarn install
       working-directory: frontend/ 
-
+      
     - name: build front
       run: yarn build
       working-directory: frontend/ 
+
+    - name: 'Create env file'
+      run: |
+        touch .env.production
+        echo NEXT_PUBLIC_API_BASE_URL=${{ env.NEXT_PUBLIC_API_BASE_URL }} >> .env
+        cat .env.production
 
     - name: Build and push frontend Docker image
       run: |
