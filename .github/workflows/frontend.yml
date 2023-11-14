@@ -26,7 +26,7 @@ jobs:
 
     - name: Build and push frontend Docker image
       run: |
-        docker build --file ./config/Dockerfile -t ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}/frontend:latest .
+        docker build --file frontend/config/Dockerfile -t ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}/frontend:latest frontend/
         docker push ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}/frontend:latest
       env:
         DOCKER_BUILDKIT: 1
