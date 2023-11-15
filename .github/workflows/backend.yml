@@ -25,6 +25,7 @@ jobs:
 
     - name: Build Go app
       run: go build -v
+      working-directory: backend/  # Set the working directory to /backend
 
     - name: Login to GitHub Container Registry
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
