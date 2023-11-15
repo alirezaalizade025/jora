@@ -1,4 +1,4 @@
-name: Go
+name: Backend
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    if: contains(github.event.head_commit.message, 'backend')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,7 +25,6 @@ jobs:
 
     - name: Build Go app
       run: go build -v
-      working-directory: backend/  # Set the working directory to /backend
 
     - name: Login to GitHub Container Registry
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
