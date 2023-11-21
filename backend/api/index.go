@@ -69,13 +69,11 @@ func panel() {
 	// add api/panel prefix
 	panel := r.Group("/api/panel")
 
-	panel.POST("/admin-info", auth.UserInfo).Use(middleware.JwtAuthMiddleware())
-
-	
 	// auth
 	panel.POST("/register", panelAuthController.Register)
 	panel.POST("/login", panelAuthController.Login)
 
+	panel.POST("/admin-info", auth.UserInfo).Use(middleware.JwtAuthMiddleware())
 
 	panel.Use(middleware.JwtAuthMiddleware())
 	// users
